@@ -3,6 +3,6 @@ module com.github.ruslanye {
     requires javafx.fxml;
     requires opencsv;
 
-    opens com.github.ruslanye.RankReslover to javafx.fxml;
-    exports com.github.ruslanye.RankReslover;
+    opens com.github.ruslanye.RankResolver.Controller to javafx.fxml;
+    exports com.github.ruslanye.RankResolver;
 }

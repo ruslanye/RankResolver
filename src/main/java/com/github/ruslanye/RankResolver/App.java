@@ -1,24 +1,20 @@
-package com.github.ruslanye.RankReslover;
+package com.github.ruslanye.RankResolver;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-/**
- * JavaFX App
- */
 public class App extends Application {
 
     @Override
-    public void start(Stage stage) {
-        var label = new Label("Hello, JavaFX!");
-        var scene = new Scene(new StackPane(label), 640, 480);
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("View/Main.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root, 400, 400);
+
+        stage.setTitle("RankResolver");
         stage.setScene(scene);
         stage.show();
     }

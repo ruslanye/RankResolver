@@ -1,4 +1,4 @@
-package com.github.ruslanye.RankReslover.Model.Domain;
+package com.github.ruslanye.RankResolver.Model.Domain;
 
 public interface SubmitObserver {
     void notify(Submit submit, Status oldStatus);
