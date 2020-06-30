@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ContestantTest {
+public class ContestantTest {
     static final String START_TIME = "2020-04-28 11:30:00";
     static final int POINTS_PER_PROBLEM = 10;
     static final long PENALTY = 20;
