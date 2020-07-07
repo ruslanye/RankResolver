@@ -7,19 +7,15 @@
           xmlns="http://javafx.com/javafx/11.0.1"
           fx:controller="com.github.ruslanye.RankResolver.Controller.MainController">
     <columnConstraints>
-        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Setup contest" fx:id="setupButton"/>
-        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Resolver" GridPane.columnIndex="1"
-                GridPane.rowIndex="1" fx:id="resolverButton"/>
-        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Live Ranking" GridPane.rowIndex="1" fx:id="rankingButton"/>
-        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Live Results"
-                GridPane.columnIndex="1" fx:id="resultsButton"/>
+        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Start"/>
+        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Settings"
+                GridPane.rowIndex="1" onMouseClicked="#settingsButtonClicked" onKeyReleased="#settingsButtonReleased"/>
     </children>
 </GridPane>
