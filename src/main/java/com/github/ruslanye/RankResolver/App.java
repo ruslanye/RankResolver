@@ -12,10 +12,8 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("View/Main.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 400, 400);
-
         stage.setTitle("RankResolver");
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 

@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.github.ruslanye.RankResolver.Controller.SettingsController"
-            prefHeight="400.0" prefWidth="600.0">
-    <TextField text="Hello world"/>
-</AnchorPane>
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.ruslanye.RankResolver.Controller.SettingsController">
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="General">
+            <GridPane hgap="10" vgap="10">
+                <padding>
+                    <Insets bottom="25" left="25" right="25" top="25" />
+                </padding>
+                <Label text="Start time" />
+                <TextField fx:id="startTimeField" GridPane.columnIndex="1"/>
+                <Label text="Duration (in minutes)" GridPane.rowIndex="1" />
+                <TextField fx:id="durationField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Submits location" GridPane.rowIndex="2" />
+                <TextField fx:id="locationField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Button onAction="#chooseFileAction" text="Choose file" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </GridPane>
+        </Tab>
+<!--        <Tab text="Problems">-->
+<!--            <VBox>-->
+<!--                <padding>-->
+<!--                    <Insets bottom="10" left="10" right="10" top="10" />-->
+<!--                </padding>-->
+<!--                <TableView editable="true" prefHeight="243.0" prefWidth="428.0">-->
+<!--                    <columns>-->
+<!--                        <TableColumn prefWidth="100" text="Problem Id">-->
+<!--                            <cellValueFactory>-->
+<!--                                <PropertyValueFactory property="problemId" />-->
+<!--                            </cellValueFactory>-->
+<!--                        </TableColumn>-->
+<!--                        <TableColumn text="Score">-->
+<!--                            <cellValueFactory>-->
+<!--                                <PropertyValueFactory property="score" />-->
+<!--                            </cellValueFactory>-->
+<!--                        </TableColumn>-->
+<!--                    </columns>-->
+<!--                </TableView>-->
+<!--            </VBox>-->
+<!--        </Tab>-->
+    </TabPane>
+    <HBox alignment="BASELINE_RIGHT" spacing="10">
+        <padding>
+            <Insets bottom="10" left="10" right="10" top="10" />
+        </padding>
+        <Button onAction="#discardChangesAction" text="Discard changes" />
+        <Button onAction="#saveChangesAction" text="Save changes" />
+    </HBox>
+</VBox>

@@ -1,5 +1,6 @@
 package com.github.ruslanye.RankResolver.Model.Domain;
 
+import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,7 @@ public class ContestantTest {
         timestamps = new LocalDateTime[24];
         for (int i = 0; i < 26; i++)
             problems[i] = new Problem(String.valueOf((char) ('A' + i)), POINTS_PER_PROBLEM);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        startTime = LocalDateTime.parse(START_TIME, formatter);
+        startTime = LocalDateTime.parse(START_TIME, Config.formatter);
         for (int i = 0; i < 24; i++) {
             timestamps[i] = startTime.plusMinutes((i + 1) * 5);
         }

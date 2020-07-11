@@ -13,9 +13,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
     </rowConstraints>
-    <children>
-        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Start"/>
-        <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Settings"
-                GridPane.rowIndex="1" onMouseClicked="#settingsButtonClicked" onKeyReleased="#settingsButtonReleased"/>
-    </children>
+    <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Start"/>
+    <Button mnemonicParsing="false" prefHeight="60.0" prefWidth="120.0" text="Settings"
+            GridPane.rowIndex="1" onAction="#showSettings"/>
 </GridPane>

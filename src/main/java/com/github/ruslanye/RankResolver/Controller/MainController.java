@@ -1,13 +1,11 @@
 package com.github.ruslanye.RankResolver.Controller;
 
 import com.github.ruslanye.RankResolver.App;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -15,11 +13,13 @@ import java.io.IOException;
 
 public class MainController {
 
-    public void showSettings() {
+    @FXML
+    public void showSettings(ActionEvent event) {
         Stage stage = new Stage();
         Parent root;
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("View/Settings.fxml"));
         try {
-            root = FXMLLoader.load(App.class.getResource("View/Settings.fxml"));
+            root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -27,16 +27,11 @@ public class MainController {
         stage.setScene(new Scene(root));
         stage.setTitle("Setup contest");
         stage.initModality(Modality.APPLICATION_MODAL);
+        SettingsController controller = loader.getController();
+        stage.setOnCloseRequest(e -> {
+            if (controller.onClose())
+                e.consume();
+        });
         stage.show();
-    }
-
-    public void settingsButtonClicked(MouseEvent event) {
-        if (event.getButton() == MouseButton.PRIMARY)
-            showSettings();
-    }
-
-    public void settingsButtonReleased(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER)
-            showSettings();
     }
 }

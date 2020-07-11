@@ -2,8 +2,8 @@ package com.github.ruslanye.RankResolver.Model.Domain;
 
 public class Problem {
 
-    private String id;
-    private int score;
+    private final String id;
+    private final int score;
 
     public Problem(String id, int score) {
         this.id = id;
