@@ -79,7 +79,7 @@ public class Contestant implements SubmitObserver {
         var submits = groupedSubmits.computeIfAbsent(problem, k -> new HashSet<>());
         submits.add(submit);
         var solution = solvedProblems.get(submit.getProblem());
-        if (submit.getStatus() == Status.OK && (solution == null || submit.getTime().isBefore(solution.getTime()))) {
+        if (submit.getStatus().isOK() && (solution == null || submit.getTime().isBefore(solution.getTime()))) {
             if (solution != null)
                 removeOK(solution, solution.getProblem());
             addOK(submit, submit.getProblem(), submits);
@@ -98,12 +98,12 @@ public class Contestant implements SubmitObserver {
             removeOK(submit, problem);
             solution = null;
             for (var sub : submits)
-                if (sub.getStatus() == Status.OK && (solution == null || sub.getTime().isBefore(solution.getTime())))
+                if (sub.getStatus().isOK() && (solution == null || sub.getTime().isBefore(solution.getTime())))
                     solution = sub;
             if (solution != null)
                 addOK(solution, problem, submits);
 
-        } else if (submit.getStatus() == Status.OK && (solution == null
+        } else if (submit.getStatus().isOK() && (solution == null
                 || submit.getTime().isBefore(solution.getTime()))) {
             if (solution != null)
                 removeOK(solution, problem);
@@ -113,5 +113,4 @@ public class Contestant implements SubmitObserver {
             observer.notify(this, submit);
         }
     }
-
 }

@@ -6,7 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,14 +19,17 @@ public class ContestantTest {
     static LocalDateTime startTime;
     static LocalDateTime[] timestamps;
     static Problem[] problems;
+    static Map<String, Status> statuses;
     Contestant contestant;
 
     @BeforeAll
     public static void setup() {
-        for (var status : Status.values())
-            if (!(status == Status.OK || status == Status.CME || status == Status.INT || status == Status.EXT
-                    || status == Status.QUE))
-                status.setPenalty(PENALTY);
+        statuses = new HashMap<>();
+        statuses.put("OK", new Status("OK", 0));
+        statuses.put("CME", new Status("CME", 0));
+        statuses.put("QUE", new Status("QUE", 0));
+        statuses.put("ANS", new Status("ANS", PENALTY));
+        statuses.put("TLE", new Status("TLE", PENALTY));
         problems = new Problem[26];
         timestamps = new LocalDateTime[24];
         for (int i = 0; i < 26; i++)
@@ -43,14 +47,14 @@ public class ContestantTest {
 
     @Test
     public void testSimple() {
-        Submit s = new Submit(123, contestant, problems[0], timestamps[0], Status.QUE);
+        Submit s = new Submit(123, contestant, problems[0], timestamps[0], statuses.get("QUE"));
 
         contestant.addSubmit(s);
 
         assertEquals(0, contestant.getScore());
         assertEquals(0, contestant.getTotalTime());
 
-        s.changeStatus(Status.OK);
+        s.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
         assertEquals(TimeUnit.MINUTES.toMillis(5), contestant.getTotalTime());
@@ -58,16 +62,16 @@ public class ContestantTest {
 
     @Test
     public void testPenalty() {
-        Submit s1 = new Submit(123, contestant, problems[0], timestamps[0], Status.QUE);
-        Submit s2 = new Submit(124, contestant, problems[0], timestamps[1], Status.QUE);
-        Submit s3 = new Submit(125, contestant, problems[0], timestamps[2], Status.QUE);
+        Submit s1 = new Submit(123, contestant, problems[0], timestamps[0], statuses.get("QUE"));
+        Submit s2 = new Submit(124, contestant, problems[0], timestamps[1], statuses.get("QUE"));
+        Submit s3 = new Submit(125, contestant, problems[0], timestamps[2], statuses.get("QUE"));
 
         contestant.addSubmit(s1);
-        s1.changeStatus(Status.ANS);
+        s1.changeStatus(statuses.get("ANS"));
         contestant.addSubmit(s2);
-        s2.changeStatus(Status.TLE);
+        s2.changeStatus(statuses.get("TLE"));
         contestant.addSubmit(s3);
-        s3.changeStatus(Status.OK);
+        s3.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
         assertEquals(TimeUnit.MINUTES.toMillis(15 + 2 * PENALTY), contestant.getTotalTime());
@@ -75,26 +79,26 @@ public class ContestantTest {
 
     @Test
     public void testRejudge() {
-        Submit s1 = new Submit(123, contestant, problems[0], timestamps[0], Status.QUE);
-        Submit s2 = new Submit(124, contestant, problems[0], timestamps[1], Status.QUE);
-        Submit s3 = new Submit(125, contestant, problems[0], timestamps[2], Status.QUE);
+        Submit s1 = new Submit(123, contestant, problems[0], timestamps[0], statuses.get("QUE"));
+        Submit s2 = new Submit(124, contestant, problems[0], timestamps[1], statuses.get("QUE"));
+        Submit s3 = new Submit(125, contestant, problems[0], timestamps[2], statuses.get("QUE"));
 
         contestant.addSubmit(s1);
-        s1.changeStatus(Status.TLE);
+        s1.changeStatus(statuses.get("TLE"));
         contestant.addSubmit(s2);
-        s2.changeStatus(Status.TLE);
+        s2.changeStatus(statuses.get("TLE"));
         contestant.addSubmit(s3);
-        s3.changeStatus(Status.TLE);
+        s3.changeStatus(statuses.get("TLE"));
 
         assertEquals(0, contestant.getScore());
         assertEquals(0, contestant.getTotalTime());
 
-        s3.changeStatus(Status.OK);
+        s3.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
         assertEquals(TimeUnit.MINUTES.toMillis(15 + 2 * PENALTY), contestant.getTotalTime());
 
-        s1.changeStatus(Status.OK);
+        s1.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
         assertEquals(TimeUnit.MINUTES.toMillis(5), contestant.getTotalTime());
@@ -102,14 +106,14 @@ public class ContestantTest {
 
     @Test
     public void testComplex() {
-        Submit s0 = new Submit(1, contestant, problems[0], timestamps[0], Status.QUE);
-        Submit s1 = new Submit(2, contestant, problems[1], timestamps[1], Status.QUE);
-        Submit s21 = new Submit(3, contestant, problems[2], timestamps[2], Status.QUE);
-        Submit s22 = new Submit(4, contestant, problems[2], timestamps[3], Status.QUE);
-        Submit s30 = new Submit(5, contestant, problems[3], timestamps[4], Status.QUE);
-        Submit s31 = new Submit(6, contestant, problems[3], timestamps[5], Status.QUE);
-        Submit s32 = new Submit(7, contestant, problems[3], timestamps[6], Status.QUE);
-        Submit s33 = new Submit(8, contestant, problems[3], timestamps[7], Status.QUE);
+        Submit s0 = new Submit(1, contestant, problems[0], timestamps[0], statuses.get("QUE"));
+        Submit s1 = new Submit(2, contestant, problems[1], timestamps[1], statuses.get("QUE"));
+        Submit s21 = new Submit(3, contestant, problems[2], timestamps[2], statuses.get("QUE"));
+        Submit s22 = new Submit(4, contestant, problems[2], timestamps[3], statuses.get("QUE"));
+        Submit s30 = new Submit(5, contestant, problems[3], timestamps[4], statuses.get("QUE"));
+        Submit s31 = new Submit(6, contestant, problems[3], timestamps[5], statuses.get("QUE"));
+        Submit s32 = new Submit(7, contestant, problems[3], timestamps[6], statuses.get("QUE"));
+        Submit s33 = new Submit(8, contestant, problems[3], timestamps[7], statuses.get("QUE"));
 
         contestant.addSubmit(s0);
         contestant.addSubmit(s1);
@@ -120,19 +124,19 @@ public class ContestantTest {
         contestant.addSubmit(s32);
         contestant.addSubmit(s33);
 
-        s0.changeStatus(Status.OK);
-        s1.changeStatus(Status.ANS);
-        s21.changeStatus(Status.TLE);
-        s22.changeStatus(Status.OK);
-        s30.changeStatus(Status.CME);
-        s31.changeStatus(Status.TLE);
-        s32.changeStatus(Status.ANS);
-        s33.changeStatus(Status.TLE);
+        s0.changeStatus(statuses.get("OK"));
+        s1.changeStatus(statuses.get("ANS"));
+        s21.changeStatus(statuses.get("TLE"));
+        s22.changeStatus(statuses.get("OK"));
+        s30.changeStatus(statuses.get("CME"));
+        s31.changeStatus(statuses.get("TLE"));
+        s32.changeStatus(statuses.get("ANS"));
+        s33.changeStatus(statuses.get("TLE"));
 
         assertEquals(2 * POINTS_PER_PROBLEM, contestant.getScore());
         assertEquals(TimeUnit.MINUTES.toMillis(25 + PENALTY), contestant.getTotalTime());
 
-        s32.changeStatus(Status.OK);
+        s32.changeStatus(statuses.get("OK"));
 
         assertEquals(3 * POINTS_PER_PROBLEM, contestant.getScore());
         assertEquals(TimeUnit.MINUTES.toMillis(60 + 2 * PENALTY), contestant.getTotalTime());

@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class Submit {
-    private long number;
+    private final long number;
     private Status status;
-    private Problem problem;
-    private LocalDateTime time;
-    private Contestant contestant;
-    private List<SubmitObserver> observers;
+    private final Problem problem;
+    private final LocalDateTime time;
+    private final Contestant contestant;
+    private final List<SubmitObserver> observers;
 
     public Submit(long number, Contestant contestant, Problem problem, LocalDateTime time, Status status) {
         this.number = number;
@@ -30,10 +30,6 @@ public class Submit {
         }
     }
 
-    public long getNumber() {
-        return number;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -44,10 +40,6 @@ public class Submit {
 
     public Problem getProblem() {
         return problem;
-    }
-
-    public Contestant getContestant() {
-        return contestant;
     }
 
     public void addObserver(SubmitObserver observer) {
@@ -63,11 +55,16 @@ public class Submit {
         if (this == o) return true;
         if (!(o instanceof Submit)) return false;
         Submit submit = (Submit) o;
-        return number == submit.number;
+        return number == submit.number &&
+                Objects.equals(status, submit.status);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(number);
+    }
+
+    public Contestant getContestant() {
+        return contestant;
     }
 }
