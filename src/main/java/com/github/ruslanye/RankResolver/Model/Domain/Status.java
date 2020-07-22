@@ -3,14 +3,14 @@ package com.github.ruslanye.RankResolver.Model.Domain;
 import java.util.Objects;
 
 public class Status {
-    private final String status;
+    private final String id;
     private final long penalty;
     private final boolean isOK;
 
-    public Status(String status, long penalty){
-        this.status = status.toUpperCase();
+    public Status(String id, long penalty){
+        this.id = id.toUpperCase();
         this.penalty = penalty;
-        this.isOK = status.equals("OK");
+        this.isOK = id.equals("OK");
     }
 
     public boolean isOK() {
@@ -21,8 +21,8 @@ public class Status {
         return penalty;
     }
 
-    public String getStatus() {
-        return status;
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class Status {
         if (this == o) return true;
         if (!(o instanceof Status)) return false;
         Status status1 = (Status) o;
-        return Objects.equals(status, status1.status);
+        return Objects.equals(id, status1.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(status);
+        return Objects.hash(id);
     }
 }

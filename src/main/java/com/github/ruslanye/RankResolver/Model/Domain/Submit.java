@@ -22,6 +22,10 @@ public class Submit {
         observers = new ArrayList<>();
     }
 
+    public long getNumber(){
+        return number;
+    }
+
     public void changeStatus(Status newStatus) {
         var oldStatus = status;
         status = newStatus;

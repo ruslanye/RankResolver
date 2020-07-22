@@ -73,7 +73,10 @@ public class Contestant implements SubmitObserver {
         totalTime -= TimeUnit.MINUTES.toMillis(penalty) + ChronoUnit.MILLIS.between(startTime, submit.getTime());
     }
 
+    @Override
     public void addSubmit(Submit submit) {
+        if(submit.getContestant() != this)
+            return;
         submit.addObserver(this);
         var problem = submit.getProblem();
         var submits = groupedSubmits.computeIfAbsent(problem, k -> new HashSet<>());

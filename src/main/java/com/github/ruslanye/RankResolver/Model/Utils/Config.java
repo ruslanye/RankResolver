@@ -11,7 +11,7 @@ public class Config {
     public static final String propPath = getConfigPath("config.properties");
     public static final String contestantsPath = getConfigPath("contestants.csv");
     public static final String problemsPath = getConfigPath("problems.csv");
-    public static final String statusesPath = getConfigPath("problems.csv");
+    public static final String statusesPath = getConfigPath("statuses.csv");
 
     public static String getConfigPath() {
         return System.getProperty("user.dir") + File.separator + "config";
@@ -25,6 +25,7 @@ public class Config {
     public final LocalDateTime startTime;
     public final String location;
     public final int liveDuration;
+    public final int fetcherDelay;
 
     public Config(){
         Properties prop = new Properties();
@@ -37,5 +38,6 @@ public class Config {
         startTime = LocalDateTime.parse(prop.getProperty("startTime"), formatter);
         location = prop.getProperty("location");
         liveDuration = Integer.parseInt(prop.getProperty("liveDuration"));
+        fetcherDelay = Integer.parseInt(prop.getProperty("fetcherDelay"));
     }
 }

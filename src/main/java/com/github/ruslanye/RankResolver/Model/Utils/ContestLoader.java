@@ -7,13 +7,13 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class ContestReader {
+public class ContestLoader {
 
     public static List<Submit> loadSubmits(String path, Contest contest) {
-        ArrayList<Submit> list = null;
+        LinkedList<Submit> list = null;
         boolean success = false;
         while (!success) {
             try (
@@ -21,9 +21,9 @@ public class ContestReader {
                     CSVReader csvReader = new CSVReader(reader)
             ) {
                 List<String[]> records = csvReader.readAll();
-                list = new ArrayList<>();
+                list = new LinkedList<>();
                 for (var record : records) {
-                    var number = Integer.parseInt(record[0]);
+                    var number = Long.parseLong(record[0]);
                     var contestant = contest.getContestant(record[1]);
                     var problem = contest.getProblem(record[2]);
                     var time = LocalDateTime.parse(record[3], Config.formatter);
@@ -32,14 +32,15 @@ public class ContestReader {
                 }
                 success = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 success = false;
             }
         }
         return list;
     }
 
-    public static List<Contestant> loadContestants(String path) {
-        ArrayList<Contestant> list = null;
+    public static List<Contestant> loadContestants(String path, Config conf) {
+        LinkedList<Contestant> list = null;
         boolean success = false;
         while (!success) {
             try (
@@ -47,13 +48,14 @@ public class ContestReader {
                     CSVReader csvReader = new CSVReader(reader)
             ) {
                 List<String[]> records = csvReader.readAll();
-                list = new ArrayList<>();
+                list = new LinkedList<>();
                 for (var record : records) {
                     var name = record[0];
-                    list.add(new Contestant(name, LocalDateTime.now()));
+                    list.add(new Contestant(name, conf.startTime));
                 }
                 success = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 success = false;
             }
         }
@@ -61,7 +63,7 @@ public class ContestReader {
     }
 
     public static List<Status> loadStatuses(String path){
-        ArrayList<Status> list = null;
+        LinkedList<Status> list = null;
         boolean success = false;
         while (!success) {
             try (
@@ -69,7 +71,7 @@ public class ContestReader {
                     CSVReader csvReader = new CSVReader(reader)
             ) {
                 List<String[]> records = csvReader.readAll();
-                list = new ArrayList<>();
+                list = new LinkedList<>();
                 for (var record : records) {
                     var status = record[0];
                     var penalty = Integer.parseInt(record[1]);
@@ -77,6 +79,7 @@ public class ContestReader {
                 }
                 success = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 success = false;
             }
         }
@@ -84,7 +87,7 @@ public class ContestReader {
     }
 
     public static List<Problem> loadProblems(String path){
-        ArrayList<Problem> list = null;
+        LinkedList<Problem> list = null;
         boolean success = false;
         while (!success) {
             try (
@@ -92,7 +95,7 @@ public class ContestReader {
                     CSVReader csvReader = new CSVReader(reader)
             ) {
                 List<String[]> records = csvReader.readAll();
-                list = new ArrayList<>();
+                list = new LinkedList<>();
                 for (var record : records) {
                     var id = record[0];
                     var score = Integer.parseInt(record[1]);
@@ -100,17 +103,18 @@ public class ContestReader {
                 }
                 success = true;
             } catch (Exception e) {
+                e.printStackTrace();
                 success = false;
             }
         }
         return list;
     }
 
-    public static Contest loadContest(String path){
+    public static Contest loadContest(Config conf){
         Contest contest = new Contest();
-        contest.addContestants(loadContestants(path));
-        contest.addProblems(loadProblems(path));
-        contest.addStatuses(loadStatuses(path));
+        contest.addContestants(loadContestants(Config.contestantsPath, conf));
+        contest.addProblems(loadProblems(Config.problemsPath));
+        contest.addStatuses(loadStatuses(Config.statusesPath));
         return contest;
     }
 }

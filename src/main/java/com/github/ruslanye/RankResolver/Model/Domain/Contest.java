@@ -1,6 +1,7 @@
 package com.github.ruslanye.RankResolver.Model.Domain;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,10 @@ public class Contest {
         return contestants.get(id);
     }
 
+    public List<Contestant> getContestants(){
+        return new LinkedList<>(contestants.values());
+    }
+
     public void addContestant(Contestant contestant){
         contestants.put(contestant.getName(), contestant);
     }
@@ -29,6 +34,10 @@ public class Contest {
 
     public Problem getProblem(String id){
         return problems.get(id);
+    }
+
+    public List<Problem> getProblems(){
+        return new LinkedList<>(problems.values());
     }
 
     public void addProblem(Problem problem){
@@ -43,8 +52,12 @@ public class Contest {
         return statuses.get(id);
     }
 
+    public List<Status> getStatuses(){
+        return new LinkedList<>(statuses.values());
+    }
+
     public void addStatus(Status status){
-        statuses.put(status.getStatus(), status);
+        statuses.put(status.getId(), status);
     }
 
     public void addStatuses(List<Status> statuses){
