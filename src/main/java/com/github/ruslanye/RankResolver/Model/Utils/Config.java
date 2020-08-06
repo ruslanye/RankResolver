@@ -26,6 +26,12 @@ public class Config {
     public final String location;
     public final int liveDuration;
     public final int fetcherDelay;
+    public final double liveResultsWidth;
+    public final double liveResultsHeight;
+    public final double liveResultsTimeout;
+    public final double submitWidth;
+    public final double submitHeight;
+    public final int submitsLimit;
 
     public Config(){
         Properties prop = new Properties();
@@ -39,5 +45,11 @@ public class Config {
         location = prop.getProperty("location");
         liveDuration = Integer.parseInt(prop.getProperty("liveDuration"));
         fetcherDelay = Integer.parseInt(prop.getProperty("fetcherDelay"));
+        liveResultsWidth = Double.parseDouble(prop.getProperty("liveResultsWidth"));
+        liveResultsHeight = Double.parseDouble(prop.getProperty("liveResultsHeight"));
+        liveResultsTimeout = Double.parseDouble(prop.getProperty("liveResultsTimeout"));
+        submitWidth = Double.parseDouble(prop.getProperty("submitWidth"));
+        submitHeight = Double.parseDouble(prop.getProperty("submitHeight"));
+        submitsLimit = Integer.parseInt(prop.getProperty("submitsLimit"));
     }
 }

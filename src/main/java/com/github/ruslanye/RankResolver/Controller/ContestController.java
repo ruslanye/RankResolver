@@ -4,6 +4,7 @@ import com.github.ruslanye.RankResolver.Model.Domain.Contest;
 import com.github.ruslanye.RankResolver.Model.Domain.Status;
 import com.github.ruslanye.RankResolver.Model.Domain.Submit;
 import com.github.ruslanye.RankResolver.Model.Domain.SubmitObserver;
+import com.github.ruslanye.RankResolver.Model.Graphics.LiveResults;
 import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import com.github.ruslanye.RankResolver.Model.Utils.ContestLoader;
 import com.github.ruslanye.RankResolver.Model.Utils.Fetcher;
@@ -14,6 +15,7 @@ public class ContestController {
     private Config conf;
     private Contest contest;
     private Fetcher fetcher;
+    private LiveResults results;
 
     public void startContest(){
         conf = new Config();
@@ -34,11 +36,14 @@ public class ContestController {
             }
         });
         Thread t = new Thread(fetcher);
+        t.setDaemon(true);
         t.start();
     }
 
     @FXML
     public void liveResults(){
-
+        results = new LiveResults(conf);
+        fetcher.addObserver(results);
+        results.show();
     }
 }

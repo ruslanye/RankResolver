@@ -16,7 +16,7 @@ if len(sys.argv) > 2:
 lines = f1.readlines()
 
 for i in range(len(lines)):
-    time.sleep(2)
+    time.sleep(4)
     with open(filepath2, 'w') as f2:
         for j in range(i):
             print(lines[j], file=f2, end='')

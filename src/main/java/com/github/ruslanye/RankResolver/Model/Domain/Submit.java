@@ -2,6 +2,7 @@ package com.github.ruslanye.RankResolver.Model.Domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class Submit {
         this.problem = problem;
         this.time = time;
         this.status = status;
-        observers = new ArrayList<>();
+        observers = new LinkedList<>();
     }
 
     public long getNumber(){
@@ -29,7 +30,7 @@ public class Submit {
     public void changeStatus(Status newStatus) {
         var oldStatus = status;
         status = newStatus;
-        for (var observer : observers) {
+        for (var observer : new LinkedList<>(observers)) {
             observer.notify(this, oldStatus);
         }
     }
