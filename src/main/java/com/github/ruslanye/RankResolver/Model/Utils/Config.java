@@ -29,9 +29,14 @@ public class Config {
     public final double liveResultsWidth;
     public final double liveResultsHeight;
     public final double liveResultsTimeout;
-    public final double submitWidth;
-    public final double submitHeight;
-    public final int submitsLimit;
+    public final double liveResultsMoveDuration;
+    public final double liveResultsFadeDuration;
+    public final double liveResultsStayDuration;
+    public final int liveResultsSubmitsLimit;
+    public final double liveSubmitWidth;
+    public final double liveSubmitHeight;
+    public final double liveRankingWidth;
+    public final double liveRankingHeight;
 
     public Config(){
         Properties prop = new Properties();
@@ -48,8 +53,13 @@ public class Config {
         liveResultsWidth = Double.parseDouble(prop.getProperty("liveResultsWidth"));
         liveResultsHeight = Double.parseDouble(prop.getProperty("liveResultsHeight"));
         liveResultsTimeout = Double.parseDouble(prop.getProperty("liveResultsTimeout"));
-        submitWidth = Double.parseDouble(prop.getProperty("submitWidth"));
-        submitHeight = Double.parseDouble(prop.getProperty("submitHeight"));
-        submitsLimit = Integer.parseInt(prop.getProperty("submitsLimit"));
+        liveResultsMoveDuration = Double.parseDouble(prop.getProperty("liveResultsMoveDuration"));
+        liveResultsFadeDuration = Double.parseDouble(prop.getProperty("liveResultsFadeDuration"));
+        liveResultsStayDuration = Double.parseDouble(prop.getProperty("liveResultsStayDuration"));
+        liveResultsSubmitsLimit = Integer.parseInt(prop.getProperty("liveResultsSubmitsLimit"));
+        liveSubmitWidth = Double.parseDouble(prop.getProperty("liveSubmitWidth"));
+        liveSubmitHeight = Double.parseDouble(prop.getProperty("liveSubmitHeight"));
+        liveRankingWidth = Double.parseDouble(prop.getProperty("liveRankingWidth"));
+        liveRankingHeight = Double.parseDouble(prop.getProperty("liveRankingHeight"));
     }
 }

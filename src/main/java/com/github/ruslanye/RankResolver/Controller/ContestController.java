@@ -4,6 +4,7 @@ import com.github.ruslanye.RankResolver.Model.Domain.Contest;
 import com.github.ruslanye.RankResolver.Model.Domain.Status;
 import com.github.ruslanye.RankResolver.Model.Domain.Submit;
 import com.github.ruslanye.RankResolver.Model.Domain.SubmitObserver;
+import com.github.ruslanye.RankResolver.Model.Graphics.LiveRanking;
 import com.github.ruslanye.RankResolver.Model.Graphics.LiveResults;
 import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import com.github.ruslanye.RankResolver.Model.Utils.ContestLoader;
@@ -16,6 +17,7 @@ public class ContestController {
     private Contest contest;
     private Fetcher fetcher;
     private LiveResults results;
+    private LiveRanking ranking;
 
     public void startContest(){
         conf = new Config();
@@ -42,8 +44,20 @@ public class ContestController {
 
     @FXML
     public void liveResults(){
-        results = new LiveResults(conf);
-        fetcher.addObserver(results);
+        if(results == null) {
+            results = new LiveResults(conf);
+            fetcher.addObserver(results);
+        }
         results.show();
+    }
+
+    @FXML
+    public void liveRanking(){
+        if(ranking == null) {
+            ranking = new LiveRanking(contest, conf);
+            for(var contestant : contest.getContestants())
+                contestant.addObserver(ranking);
+        }
+        ranking.show();
     }
 }
