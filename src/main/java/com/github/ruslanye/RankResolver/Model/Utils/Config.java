@@ -20,11 +20,13 @@ public class Config {
     public static String getConfigPath(String path){
         return getConfigPath() + File.separator + path;
     }
+    
+    private final Properties prop;
 
-    public final int duration;
     public final LocalDateTime startTime;
-    public final String location;
+    public final String submitsPath;
     public final int liveDuration;
+    public final int contestDuration;
     public final int fetcherDelay;
     public final double liveResultsWidth;
     public final double liveResultsHeight;
@@ -37,29 +39,44 @@ public class Config {
     public final double liveSubmitHeight;
     public final double liveRankingWidth;
     public final double liveRankingHeight;
+    public final double liveContestantWidth;
+    public final double liveContestantHeight;
+    public final double liveRankingMoveDuration;
 
     public Config(){
-        Properties prop = new Properties();
+        prop = new Properties();
         try {
             prop.load(new FileInputStream(propPath));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        duration = Integer.parseInt(prop.getProperty("duration"));
+
         startTime = LocalDateTime.parse(prop.getProperty("startTime"), formatter);
-        location = prop.getProperty("location");
-        liveDuration = Integer.parseInt(prop.getProperty("liveDuration"));
-        fetcherDelay = Integer.parseInt(prop.getProperty("fetcherDelay"));
-        liveResultsWidth = Double.parseDouble(prop.getProperty("liveResultsWidth"));
-        liveResultsHeight = Double.parseDouble(prop.getProperty("liveResultsHeight"));
-        liveResultsTimeout = Double.parseDouble(prop.getProperty("liveResultsTimeout"));
-        liveResultsMoveDuration = Double.parseDouble(prop.getProperty("liveResultsMoveDuration"));
-        liveResultsFadeDuration = Double.parseDouble(prop.getProperty("liveResultsFadeDuration"));
-        liveResultsStayDuration = Double.parseDouble(prop.getProperty("liveResultsStayDuration"));
-        liveResultsSubmitsLimit = Integer.parseInt(prop.getProperty("liveResultsSubmitsLimit"));
-        liveSubmitWidth = Double.parseDouble(prop.getProperty("liveSubmitWidth"));
-        liveSubmitHeight = Double.parseDouble(prop.getProperty("liveSubmitHeight"));
-        liveRankingWidth = Double.parseDouble(prop.getProperty("liveRankingWidth"));
-        liveRankingHeight = Double.parseDouble(prop.getProperty("liveRankingHeight"));
+        submitsPath = prop.getProperty("submitsPath");
+        liveDuration = getIntProp("liveDuration");
+        contestDuration = getIntProp("contestDuration");
+        fetcherDelay = getIntProp("fetcherDelay");
+        liveResultsWidth = getDoubleProp("liveResultsWidth");
+        liveResultsHeight = getDoubleProp("liveResultsHeight");
+        liveResultsTimeout = getDoubleProp("liveResultsTimeout");
+        liveResultsMoveDuration = getDoubleProp("liveResultsMoveDuration");
+        liveResultsFadeDuration = getDoubleProp("liveResultsFadeDuration");
+        liveResultsStayDuration = getDoubleProp("liveResultsStayDuration");
+        liveResultsSubmitsLimit = getIntProp("liveResultsSubmitsLimit");
+        liveSubmitWidth = getDoubleProp("liveSubmitWidth");
+        liveSubmitHeight = getDoubleProp("liveSubmitHeight");
+        liveRankingWidth = getDoubleProp("liveRankingWidth");
+        liveRankingHeight = getDoubleProp("liveRankingHeight");
+        liveContestantWidth = getDoubleProp("liveContestantWidth");
+        liveContestantHeight = getDoubleProp("liveContestantHeight");
+        liveRankingMoveDuration = getDoubleProp("liveRankingMoveDuration");
+    }
+    
+    private double getDoubleProp(String name){
+        return Double.parseDouble(prop.getProperty(name));
+    }
+    
+    private int getIntProp(String name){
+        return Integer.parseInt(prop.getProperty(name));
     }
 }

@@ -15,7 +15,6 @@
 //import java.util.Properties;
 //
 //public class SettingsController {
-//
 //    @FXML
 //    public TextField startTimeField;
 //    @FXML

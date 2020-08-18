@@ -17,10 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LiveResults extends Stage implements SubmitObserver {
-
     private static final Double MARGIN = 0.05;
     private final Config conf;
-    private final List<LiveSubmit> submits;
+    private final List<LiveSubmit> liveSubs;
     private final Pane pane;
 
     public LiveResults(Config conf) {
@@ -31,11 +30,11 @@ public class LiveResults extends Stage implements SubmitObserver {
         setScene(scene);
         setWidth(conf.liveResultsWidth);
         setHeight(conf.liveResultsHeight);
-        submits = new LinkedList<>();
+        liveSubs = new LinkedList<>();
     }
 
     private double getSubmitY(LiveSubmit sub) {
-        int pos = submits.indexOf(sub);
+        int pos = liveSubs.indexOf(sub);
         return getHeight() * MARGIN + sub.getPrefHeight() * pos;
     }
 
@@ -43,10 +42,10 @@ public class LiveResults extends Stage implements SubmitObserver {
         Animation delay = new SequentialTransition(new PauseTransition(duration));
         Animation exit = submit.moveTo(-submit.getPrefHeight());
         delay.setOnFinished(e -> {
-            if(!submits.contains(submit))
+            if(!liveSubs.contains(submit))
                 return;
-            submits.remove(submit);
-            for (var sub : submits)
+            liveSubs.remove(submit);
+            for (var sub : liveSubs)
                 sub.moveTo(getSubmitY(sub)).play();
             exit.setOnFinished((e1 -> {
                 pane.getChildren().remove(submit);
@@ -57,38 +56,42 @@ public class LiveResults extends Stage implements SubmitObserver {
     }
 
     @Override
-    public void notify(Submit s, Status oldStatus) {
+    public void notify(Submit sub, Status oldStatus) {
         Platform.runLater(() -> {
-            LiveSubmit toRemove = null;
-            for (var sub : submits)
-                if (sub.getSubmit() == s) {
-                    toRemove = sub;
-                    break;
+            synchronized (this){
+                LiveSubmit toRemove = null;
+                for (var liveSub : liveSubs)
+                    if (liveSub.getSubmit() == sub) {
+                        toRemove = liveSub;
+                        break;
+                    }
+                if (toRemove != null) {
+                    toRemove.updateStatus();
+                    Animation pause = delayExit(toRemove, Duration.millis(conf.liveResultsStayDuration));
+                    pause.play();
                 }
-            if (toRemove != null) {
-                toRemove.updateStatus();
-                Animation pause = delayExit(toRemove, Duration.millis(conf.liveResultsStayDuration));
-                pause.play();
+                sub.removeObserver(this);
             }
         });
-        s.removeObserver(this);
     }
 
     @Override
-    public void addSubmit(Submit s) {
-        s.addObserver(this);
+    public void addSubmit(Submit sub) {
         Platform.runLater(() -> {
-            if (submits.size() >= conf.liveResultsSubmitsLimit)
-                return;
-            LiveSubmit submit = new LiveSubmit(s, conf);
-            submits.add(submit);
-            submit.setLayoutX((getWidth() - submit.getPrefWidth()) / 2);
-            submit.setLayoutY(getHeight());
-            Animation enter = submit.moveTo(getSubmitY(submit));
-            pane.getChildren().add(submit);
-            enter.play();
-            Animation timeout = delayExit(submit, Duration.millis(conf.liveResultsTimeout));
-            timeout.play();
+            synchronized (this){
+                sub.addObserver(this);
+                if (liveSubs.size() >= conf.liveResultsSubmitsLimit)
+                    return;
+                LiveSubmit liveSub = new LiveSubmit(sub, conf);
+                liveSubs.add(liveSub);
+                liveSub.setLayoutX((getWidth() - liveSub.getPrefWidth()) / 2);
+                liveSub.setLayoutY(getHeight());
+                Animation enter = liveSub.moveTo(getSubmitY(liveSub));
+                pane.getChildren().add(liveSub);
+                enter.play();
+                Animation timeout = delayExit(liveSub, Duration.millis(conf.liveResultsTimeout));
+                timeout.play();
+            }
         });
     }
 }

@@ -12,7 +12,6 @@ import com.github.ruslanye.RankResolver.Model.Utils.Fetcher;
 import javafx.fxml.FXML;
 
 public class ContestController {
-
     private Config conf;
     private Contest contest;
     private Fetcher fetcher;

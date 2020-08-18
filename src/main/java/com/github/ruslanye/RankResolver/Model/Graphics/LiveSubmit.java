@@ -12,7 +12,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class LiveSubmit extends StackPane {
-
     private final Text status;
     private final Rectangle background;
     private final Submit submit;

@@ -11,8 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ContestLoader {
-
-    public static List<Submit> loadSubmits(String path, Contest contest) {
+    public static List<Submit> loadSubmits(String path, Contest contest, Config conf) {
         LinkedList<Submit> list = null;
         boolean success = false;
         while (!success) {
@@ -27,6 +26,8 @@ public class ContestLoader {
                     var contestant = contest.getContestant(record[1]);
                     var problem = contest.getProblem(record[2]);
                     var time = LocalDateTime.parse(record[3], Config.formatter);
+                    if(time.isAfter(conf.startTime) && time.isBefore(conf.startTime.plusMinutes(conf.contestDuration)))
+                        continue;
                     var status = contest.getStatus(record[4]);
                     list.add(new Submit(number, contestant, problem, time, status));
                 }

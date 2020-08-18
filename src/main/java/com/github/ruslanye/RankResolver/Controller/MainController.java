@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainController {
-
 //    @FXML
 //    public void showSettings(ActionEvent event) {
 //        Stage stage = new Stage();

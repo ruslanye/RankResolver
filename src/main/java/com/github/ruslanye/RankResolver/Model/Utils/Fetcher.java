@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Fetcher implements Runnable {
-
     private final List<SubmitObserver> observers;
     private final Config conf;
     private final Contest contest;
@@ -37,7 +36,7 @@ public class Fetcher implements Runnable {
             } catch (InterruptedException e) {
                 return;
             }
-            var newSubmits = ContestLoader.loadSubmits(conf.location, contest);
+            var newSubmits = ContestLoader.loadSubmits(conf.submitsPath, contest, conf);
             var it1 = submits.listIterator();
             var it2 = newSubmits.listIterator();
             LinkedList<Submit> toAdd = new LinkedList<>();
@@ -57,6 +56,7 @@ public class Fetcher implements Runnable {
                     }
                 } else{
                     var s2 = it2.next();
+
                     for(var observer : observers)
                         observer.addSubmit(s2);
                     toAdd.add(s2);

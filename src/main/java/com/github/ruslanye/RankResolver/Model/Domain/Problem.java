@@ -1,7 +1,6 @@
 package com.github.ruslanye.RankResolver.Model.Domain;
 
 public class Problem {
-
     private final String id;
     private final int score;
 

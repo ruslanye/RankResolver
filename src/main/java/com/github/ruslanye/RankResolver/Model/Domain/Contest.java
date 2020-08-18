@@ -1,19 +1,18 @@
 package com.github.ruslanye.RankResolver.Model.Domain;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Contest {
+public class Contest implements SubmitObserver{
     private final Map<String, Contestant> contestants;
     private final Map<String, Problem> problems;
     private final Map<String, Status> statuses;
+    private final List<Submit> submits;
 
     public Contest(){
         contestants = new HashMap<>();
         problems = new HashMap<>();
         statuses = new HashMap<>();
+        submits = new ArrayList<>();
     }
 
     public Contestant getContestant(String id){
@@ -62,5 +61,19 @@ public class Contest {
 
     public void addStatuses(List<Status> statuses){
         statuses.forEach(this::addStatus);
+    }
+
+    @Override
+    public void notify(Submit submit, Status oldStatus) {
+
+    }
+
+    @Override
+    public void addSubmit(Submit submit) {
+        submits.add(submit);
+    }
+
+    public List<Submit> getSubmits(){
+        return submits;
     }
 }
