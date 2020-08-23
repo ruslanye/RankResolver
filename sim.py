@@ -31,7 +31,7 @@ for i in range(len(lines)):
         row = lines[i].split(',')
         row[4] = "QUE"
         print(','.join(row), file=f2, end='')
-    time.sleep(0.5)
+    time.sleep(3)
 with open(filepath2, 'w') as f2:
     for line in lines:
         print(line, file=f2, end='')

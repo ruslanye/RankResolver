@@ -21,6 +21,8 @@ public class Submit {
         this.time = time;
         this.status = status;
         observers = new LinkedList<>();
+        if(status.isOK())
+            problem.solvedFirst(contestant);
     }
 
     public long getNumber(){
@@ -30,6 +32,8 @@ public class Submit {
     public void changeStatus(Status newStatus) {
         var oldStatus = status;
         status = newStatus;
+        if(status.isOK())
+            problem.solvedFirst(contestant);
         for (var observer : new LinkedList<>(observers)) {
             observer.notify(this, oldStatus);
         }

@@ -8,22 +8,18 @@ import java.util.concurrent.TimeUnit;
 public class Contestant implements SubmitObserver {
     private final String name;
     private final LocalDateTime startTime;
+    private final LocalDateTime freezeTime;
+    private final Calculator calculator;
+    private final Calculator frozenCalculator;
     private final List<ContestantObserver> observers;
-    private final Map<Problem, Submit> solvedProblems;
-    private final Map<Problem, Set<Submit>> groupedSubmits;
-    private final Map<Problem, Long> penalties;
-    private int score;
-    private long totalTime;
 
-    public Contestant(String name, LocalDateTime startTime) {
-        score = 0;
-        totalTime = 0;
+    public Contestant(String name, LocalDateTime startTime, LocalDateTime freezeTime) {
         this.name = name;
         this.startTime = startTime;
+        this.freezeTime = freezeTime;
         observers = new ArrayList<>();
-        groupedSubmits = new HashMap<>();
-        solvedProblems = new HashMap<>();
-        penalties = new HashMap<>();
+        calculator = new Calculator(startTime);
+        frozenCalculator = new Calculator(startTime);
     }
 
     public String getName() {
@@ -31,11 +27,19 @@ public class Contestant implements SubmitObserver {
     }
 
     public int getScore() {
-        return score;
+        return calculator.getScore();
     }
 
-    public long getTotalTime() {
-        return totalTime;
+    public int getFrozenScore() {
+        return frozenCalculator.getScore();
+    }
+
+    public long getTime() {
+        return calculator.getTime();
+    }
+
+    public long getFrozenTime(){
+        return frozenCalculator.getTime();
     }
 
     public void addObserver(ContestantObserver observer) {
@@ -46,47 +50,38 @@ public class Contestant implements SubmitObserver {
         observers.remove(observer);
     }
 
-    public Set<Submit> getSubmits(Problem problem) {
-        return Collections.unmodifiableSet(groupedSubmits.get(problem));
+    public List<Submit> getSubmits(Problem problem) {
+        return calculator.getSubmits(problem);
     }
 
-    private long calculatePenalty(Set<Submit> submits, Submit solution) {
-        long penalty = 0;
-        for (var sub : submits)
-            if (sub.getTime().isBefore(solution.getTime()))
-                penalty += sub.getStatus().getPenalty();
-        return penalty;
+    public List<Submit> getFrozenSubmits(Problem problem){
+        return frozenCalculator.getSubmits(problem);
     }
 
-    private void addOK(Submit submit, Problem problem, Set<Submit> submits) {
-        solvedProblems.put(problem, submit);
-        score += problem.getScore();
-        long penalty = calculatePenalty(submits, submit);
-        penalties.put(problem, penalty);
-        totalTime += TimeUnit.MINUTES.toMillis(penalty) + ChronoUnit.MILLIS.between(startTime, submit.getTime());
+    public Submit getSolution(Problem problem){
+        return calculator.getSolution(problem);
     }
 
-    private void removeOK(Submit submit, Problem problem) {
-        solvedProblems.remove(problem);
-        score -= problem.getScore();
-        long penalty = penalties.get(problem);
-        totalTime -= TimeUnit.MINUTES.toMillis(penalty) + ChronoUnit.MILLIS.between(startTime, submit.getTime());
+    public Submit getFrozenSolution(Problem problem){
+        return frozenCalculator.getSolution(problem);
+    }
+
+    public int countAttempts(Problem problem){
+        return calculator.countAttempts(problem);
+    }
+
+    public int countFrozenAttempts(Problem problem){
+        return frozenCalculator.countAttempts(problem);
     }
 
     @Override
     public void addSubmit(Submit submit) {
-        if(submit.getContestant() != this)
+        if(!submit.getContestant().equals(this))
             return;
         submit.addObserver(this);
-        var problem = submit.getProblem();
-        var submits = groupedSubmits.computeIfAbsent(problem, k -> new HashSet<>());
-        submits.add(submit);
-        var solution = solvedProblems.get(submit.getProblem());
-        if (submit.getStatus().isOK() && (solution == null || submit.getTime().isBefore(solution.getTime()))) {
-            if (solution != null)
-                removeOK(solution, solution.getProblem());
-            addOK(submit, submit.getProblem(), submits);
-        }
+        calculator.addSubmit(submit);
+        if(submit.getTime().isBefore(freezeTime))
+            frozenCalculator.addSubmit(submit);
         for (var observer : observers) {
             observer.notify(this, submit);
         }
@@ -94,24 +89,9 @@ public class Contestant implements SubmitObserver {
 
     @Override
     public void notify(Submit submit, Status oldStatus) {
-        var problem = submit.getProblem();
-        var submits = groupedSubmits.get(problem);
-        var solution = solvedProblems.get(problem);
-        if (submit.getStatus() != oldStatus && solution == submit) {
-            removeOK(submit, problem);
-            solution = null;
-            for (var sub : submits)
-                if (sub.getStatus().isOK() && (solution == null || sub.getTime().isBefore(solution.getTime())))
-                    solution = sub;
-            if (solution != null)
-                addOK(solution, problem, submits);
-
-        } else if (submit.getStatus().isOK() && (solution == null
-                || submit.getTime().isBefore(solution.getTime()))) {
-            if (solution != null)
-                removeOK(solution, problem);
-            addOK(submit, problem, submits);
-        }
+        calculator.updateSubmit(submit, oldStatus);
+        if(submit.getTime().isBefore(freezeTime))
+            frozenCalculator.updateSubmit(submit, oldStatus);
         for (var observer : observers) {
             observer.notify(this, submit);
         }

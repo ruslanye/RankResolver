@@ -26,7 +26,7 @@ public class ContestLoader {
                     var contestant = contest.getContestant(record[1]);
                     var problem = contest.getProblem(record[2]);
                     var time = LocalDateTime.parse(record[3], Config.formatter);
-                    if(time.isAfter(conf.startTime) && time.isBefore(conf.startTime.plusMinutes(conf.contestDuration)))
+                    if(!(time.isAfter(conf.startTime) && time.isBefore(conf.startTime.plusMinutes(conf.contestDuration))))
                         continue;
                     var status = contest.getStatus(record[4]);
                     list.add(new Submit(number, contestant, problem, time, status));
@@ -52,7 +52,7 @@ public class ContestLoader {
                 list = new LinkedList<>();
                 for (var record : records) {
                     var name = record[0];
-                    list.add(new Contestant(name, conf.startTime));
+                    list.add(new Contestant(name, conf.startTime, conf.startTime.plusMinutes(conf.liveDuration)));
                 }
                 success = true;
             } catch (Exception e) {

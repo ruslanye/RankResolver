@@ -1,5 +1,7 @@
 package com.github.ruslanye.RankResolver.Model.Utils;
 
+import javafx.scene.paint.Color;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,13 +37,19 @@ public class Config {
     public final double liveResultsFadeDuration;
     public final double liveResultsStayDuration;
     public final int liveResultsSubmitsLimit;
-    public final double liveSubmitWidth;
-    public final double liveSubmitHeight;
-    public final double liveRankingWidth;
-    public final double liveRankingHeight;
-    public final double liveContestantWidth;
-    public final double liveContestantHeight;
+    public final double rankingWidth;
+    public final double rankingHeight;
+    public final int rankingContestantsLimit;
+    public final double boxWidth;
     public final double liveRankingMoveDuration;
+    public final Color queuedColor;
+    public final Color failedColor;
+    public final Color solvedColor;
+    public final Color solvedFirstColor;
+    public final Color headerColor;
+    public final Color rowColor1;
+    public final Color rowColor2;
+    public final double fontSize;
 
     public Config(){
         prop = new Properties();
@@ -63,13 +71,19 @@ public class Config {
         liveResultsFadeDuration = getDoubleProp("liveResultsFadeDuration");
         liveResultsStayDuration = getDoubleProp("liveResultsStayDuration");
         liveResultsSubmitsLimit = getIntProp("liveResultsSubmitsLimit");
-        liveSubmitWidth = getDoubleProp("liveSubmitWidth");
-        liveSubmitHeight = getDoubleProp("liveSubmitHeight");
-        liveRankingWidth = getDoubleProp("liveRankingWidth");
-        liveRankingHeight = getDoubleProp("liveRankingHeight");
-        liveContestantWidth = getDoubleProp("liveContestantWidth");
-        liveContestantHeight = getDoubleProp("liveContestantHeight");
+        rankingWidth = getDoubleProp("rankingWidth");
+        rankingHeight = getDoubleProp("rankingHeight");
+        rankingContestantsLimit = getIntProp("rankingContestantsLimit");
+        boxWidth = getDoubleProp("boxWidth");
         liveRankingMoveDuration = getDoubleProp("liveRankingMoveDuration");
+        queuedColor = getColorProp("queuedColor");
+        failedColor = getColorProp("failedColor");
+        solvedColor = getColorProp("solvedColor");
+        solvedFirstColor = getColorProp("solvedFirstColor");
+        headerColor = getColorProp("headerColor");
+        rowColor1 = getColorProp("rowColor1");
+        rowColor2 = getColorProp("rowColor2");
+        fontSize = getDoubleProp("fontSize");
     }
     
     private double getDoubleProp(String name){
@@ -78,5 +92,9 @@ public class Config {
     
     private int getIntProp(String name){
         return Integer.parseInt(prop.getProperty(name));
+    }
+
+    private Color getColorProp(String name){
+        return Color.web(prop.getProperty(name));
     }
 }

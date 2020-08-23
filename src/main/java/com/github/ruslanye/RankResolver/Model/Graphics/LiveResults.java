@@ -17,15 +17,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LiveResults extends Stage implements SubmitObserver {
-    private static final Double MARGIN = 0.05;
+    private static final Double MARGIN = 0.1;
     private final Config conf;
     private final List<LiveSubmit> liveSubs;
     private final Pane pane;
+    private int count;
 
     public LiveResults(Config conf) {
         this.conf = conf;
+        count = 0;
+
         setTitle("LiveResults");
         pane = new Pane();
+
         Scene scene = new Scene(pane);
         setScene(scene);
         setWidth(conf.liveResultsWidth);
@@ -33,9 +37,25 @@ public class LiveResults extends Stage implements SubmitObserver {
         liveSubs = new LinkedList<>();
     }
 
+    private double getLimit(){
+        return conf.liveResultsSubmitsLimit;
+    }
+
+    private double getSubmitX(){
+        return getWidth() * MARGIN;
+    }
+
     private double getSubmitY(LiveSubmit sub) {
         int pos = liveSubs.indexOf(sub);
         return getHeight() * MARGIN + sub.getPrefHeight() * pos;
+    }
+
+    private double getSubmitWidth(){
+        return getWidth() * (1 - 2 * MARGIN);
+    }
+
+    private double getSubmitHeight(){
+        return getHeight() * (1 - 2 * MARGIN) / getLimit();
     }
 
     private Animation delayExit(LiveSubmit submit, Duration duration) {
@@ -82,9 +102,13 @@ public class LiveResults extends Stage implements SubmitObserver {
                 sub.addObserver(this);
                 if (liveSubs.size() >= conf.liveResultsSubmitsLimit)
                     return;
-                LiveSubmit liveSub = new LiveSubmit(sub, conf);
+                LiveSubmit liveSub = new LiveSubmit(sub, conf, getSubmitWidth(), getSubmitHeight());
+                if(count++%2==0)
+                    liveSub.setFill(conf.rowColor1);
+                else
+                    liveSub.setFill(conf.rowColor2);
                 liveSubs.add(liveSub);
-                liveSub.setLayoutX((getWidth() - liveSub.getPrefWidth()) / 2);
+                liveSub.setLayoutX(getSubmitX());
                 liveSub.setLayoutY(getHeight());
                 Animation enter = liveSub.moveTo(getSubmitY(liveSub));
                 pane.getChildren().add(liveSub);

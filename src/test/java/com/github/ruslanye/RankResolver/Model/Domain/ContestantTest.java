@@ -42,7 +42,7 @@ public class ContestantTest {
 
     @BeforeEach
     public void setupContestant() {
-        contestant = new Contestant("PPP", startTime);
+        contestant = new Contestant("PPP", startTime, startTime.plusMinutes(1000));
     }
 
     @Test
@@ -52,12 +52,12 @@ public class ContestantTest {
         contestant.addSubmit(s);
 
         assertEquals(0, contestant.getScore());
-        assertEquals(0, contestant.getTotalTime());
+        assertEquals(0, contestant.getTime());
 
         s.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
-        assertEquals(TimeUnit.MINUTES.toMillis(5), contestant.getTotalTime());
+        assertEquals(TimeUnit.MINUTES.toMillis(5), contestant.getTime());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ContestantTest {
         s3.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
-        assertEquals(TimeUnit.MINUTES.toMillis(15 + 2 * PENALTY), contestant.getTotalTime());
+        assertEquals(TimeUnit.MINUTES.toMillis(15 + 2 * PENALTY), contestant.getTime());
     }
 
     @Test
@@ -91,17 +91,17 @@ public class ContestantTest {
         s3.changeStatus(statuses.get("TLE"));
 
         assertEquals(0, contestant.getScore());
-        assertEquals(0, contestant.getTotalTime());
+        assertEquals(0, contestant.getTime());
 
         s3.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
-        assertEquals(TimeUnit.MINUTES.toMillis(15 + 2 * PENALTY), contestant.getTotalTime());
+        assertEquals(TimeUnit.MINUTES.toMillis(15 + 2 * PENALTY), contestant.getTime());
 
         s1.changeStatus(statuses.get("OK"));
 
         assertEquals(POINTS_PER_PROBLEM, contestant.getScore());
-        assertEquals(TimeUnit.MINUTES.toMillis(5), contestant.getTotalTime());
+        assertEquals(TimeUnit.MINUTES.toMillis(5), contestant.getTime());
     }
 
     @Test
@@ -134,12 +134,12 @@ public class ContestantTest {
         s33.changeStatus(statuses.get("TLE"));
 
         assertEquals(2 * POINTS_PER_PROBLEM, contestant.getScore());
-        assertEquals(TimeUnit.MINUTES.toMillis(25 + PENALTY), contestant.getTotalTime());
+        assertEquals(TimeUnit.MINUTES.toMillis(25 + PENALTY), contestant.getTime());
 
         s32.changeStatus(statuses.get("OK"));
 
         assertEquals(3 * POINTS_PER_PROBLEM, contestant.getScore());
-        assertEquals(TimeUnit.MINUTES.toMillis(60 + 2 * PENALTY), contestant.getTotalTime());
+        assertEquals(TimeUnit.MINUTES.toMillis(60 + 2 * PENALTY), contestant.getTime());
     }
 
 }
