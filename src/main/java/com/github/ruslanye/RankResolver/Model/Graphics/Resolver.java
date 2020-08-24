@@ -8,16 +8,25 @@ import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Resolver extends Ranking {
     private final List<Animation> forwards;
     private final List<Animation> backwards;
+    private final Map<Contestant, StackPane> winners;
     private int nextAnim;
     private int prevAnim;
     private boolean playing;
@@ -54,6 +63,7 @@ public class Resolver extends Ranking {
         playing = false;
         forwards = new ArrayList<>();
         backwards = new ArrayList<>();
+        winners = new HashMap<>();
         prepareResolver();
     }
 
@@ -83,6 +93,20 @@ public class Resolver extends Ranking {
     }
 
     private void announceWinner(Contestant con){
+        var text1 = new Text("Congratulations,");
+        var text2 = new Text(con.getName());
+        text1.setFont(Font.font(conf.fontSize*2));
+        text2.setFont(Font.font(conf.fontSize*2));
+        var box = new VBox(text1, text2);
+        box.setAlignment(Pos.CENTER);
+        var rect = new Rectangle(getWidth(), getHeight());
+        rect.setFill(Color.WHITE);
+        var stack = new StackPane(rect, box);
+        winners.put(con, stack);
+        forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().add(stack)))));
+        backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().remove(stack)))));
+        forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().remove(stack)))));
+        backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().add(stack)))));
 
     }
 
@@ -101,6 +125,8 @@ public class Resolver extends Ranking {
             if (!liveCon.isFrozen()) {
                 forwards.add(unselectRow(i));
                 backwards.add(selectRow(i));
+                if(i < conf.winnersNumber)
+                    announceWinner(liveCon.getContestant());
                 if (i >= conf.rankingContestantsLimit) {
                     forwards.add(moveToEnd(i, conf.resolverStepDuration));
                     backwards.add(moveToEnd(i + 1, conf.resolverStepDuration));
