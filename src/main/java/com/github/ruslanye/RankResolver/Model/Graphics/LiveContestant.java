@@ -6,14 +6,14 @@ import com.github.ruslanye.RankResolver.Model.Domain.Problem;
 import com.github.ruslanye.RankResolver.Model.Domain.Submit;
 import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class LiveContestant extends HBox {
@@ -30,6 +30,7 @@ public class LiveContestant extends HBox {
     private final TextBox placeHolder2;
     private double width;
     private double height;
+    private boolean frozen;
 
     public LiveContestant(Contestant contestant, Contest contest, Config conf, double width, double height) {
         this.contestant = contestant;
@@ -59,6 +60,8 @@ public class LiveContestant extends HBox {
 
         updateWidth(width);
         updateHeight(height);
+
+        frozen = true;
     }
 
     public Contestant getContestant() {
@@ -66,15 +69,14 @@ public class LiveContestant extends HBox {
     }
 
     public Animation moveTo(double y) {
-        return new Timeline(new KeyFrame(Duration.millis(conf.liveRankingMoveDuration), new KeyValue(layoutYProperty(), y)));
+        return new Timeline(new KeyFrame(conf.liveRankingMoveDuration, new KeyValue(layoutYProperty(), y)));
     }
 
-    public Animation update(Submit submit) {
+    public void update(Submit submit) {
         score.getText().setText(String.valueOf(contestant.getFrozenScore()));
-        time.getText().setText(" " + TimeUnit.MILLISECONDS.toMinutes(contestant.getFrozenTime()));
+        time.getText().setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(contestant.getFrozenTime())));
         var problem = submit.getProblem();
-        problems.get(problem).update(contestant, problem, conf);
-        return new ParallelTransition();
+        problems.get(problem).update(submit);
     }
 
     public void setRank(int pos) {
@@ -96,6 +98,12 @@ public class LiveContestant extends HBox {
 
     public void updateHeight(double newHeight) {
         height = newHeight;
+        rank.updateHeight(height);
+        name.updateHeight(height);
+        score.updateHeight(height);
+        placeHolder1.updateHeight(height);
+        time.updateHeight(height);
+        placeHolder2.updateHeight(height);
         for (var problem : problems.values())
             problem.updateHeight(height * PROBLEM_HEIGHT_RATIO);
         setPrefHeight(height);
@@ -114,5 +122,67 @@ public class LiveContestant extends HBox {
         for (var problem : problems.values())
             problem.updateWidth(boxWidth);
         setPrefWidth(width);
+    }
+
+    public List<Animation> unfreeze(){
+        List<Animation> queue = new ArrayList<>();
+        for(var problem : contest.getProblems()){
+            if(contestant.getSubmits(problem).size() <= 0 || contestant.getFrozenSolution(problem) != null)
+                continue;
+            var liveProblem = problems.get(problem);
+            queue.add(doAction(e -> liveProblem.select()));
+            queue.add(doAction(e -> liveProblem.unfreeze()));
+            queue.add(doAction(e -> liveProblem.unselect()));
+        }
+        if(queue.size() == 0)
+            return queue;
+        queue.add(doAction(e -> time.select(conf)));
+        queue.add(doAction(e -> time.getText().setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(contestant.getTime())))));
+        queue.add(doAction(e -> time.unselect()));
+        queue.add(doAction(e -> score.select(conf)));
+        queue.add(doAction(e -> score.getText().setText(String.valueOf(contestant.getScore()))));
+        queue.add(doAction(e -> score.unselect()));
+        return queue;
+    }
+
+    public List<Animation> freeze(){
+        List<Animation> queue = new ArrayList<>();
+        for(var problem : contest.getProblems()){
+            if(contestant.getSubmits(problem).size() <= 0 || contestant.getFrozenSolution(problem) != null)
+                continue;
+            var liveProblem = problems.get(problem);
+            queue.add(doAction(e -> liveProblem.unselect()));
+            queue.add(doAction(e -> liveProblem.update()));
+            queue.add(doAction(e -> liveProblem.select()));
+        }
+        if(queue.size() == 0)
+            return queue;
+        queue.add(doAction(e -> time.select(conf)));
+        queue.add(doAction(e -> time.getText().setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(contestant.getFrozenTime())))));
+        queue.add(doAction(e -> time.unselect()));
+        queue.add(doAction(e -> score.select(conf)));
+        queue.add(doAction(e -> score.getText().setText(String.valueOf(contestant.getFrozenScore()))));
+        queue.add(doAction(e -> score.unselect()));
+        return queue;
+    }
+
+    private Animation doAction(EventHandler<ActionEvent> onFinished){
+        return new Timeline(new KeyFrame(Duration.millis(1), onFinished));
+    }
+
+    public int getScore(){
+        return frozen ? contestant.getFrozenScore() : contestant.getScore();
+    }
+
+    public long getTime(){
+        return frozen ? contestant.getFrozenTime() : contestant.getTime();
+    }
+
+    public void setFrozen(boolean frozen){
+        this.frozen = frozen;
+    }
+
+    public boolean isFrozen(){
+        return frozen;
     }
 }

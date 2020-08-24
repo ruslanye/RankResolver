@@ -6,15 +6,21 @@ public class Status {
     private final String id;
     private final long penalty;
     private final boolean isOK;
+    private final boolean isQUE;
 
     public Status(String id, long penalty){
         this.id = id.toUpperCase();
         this.penalty = penalty;
         this.isOK = id.equals("OK");
+        this.isQUE = id.equals("QUE");
     }
 
     public boolean isOK() {
         return isOK;
+    }
+
+    public boolean isQUE() {
+        return isQUE;
     }
 
     public long getPenalty() {

@@ -10,7 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+import javafx.scene.text.Font;
 
 public class LiveSubmit extends StackPane {
     private final Rectangle background;
@@ -32,13 +32,13 @@ public class LiveSubmit extends StackPane {
 
         box = new HBox();
 
-        name = new TextBox(submit.getContestant().getName());
-        problem = new TextBox(submit.getProblem().getId());
-        time = new TextBox(submit.getTime().toString());
-        status = new TextBox(submit.getStatus().getId());
+        name = new TextBox(submit.getContestant().getName(), Font.font(conf.fontSize));
+        problem = new TextBox(submit.getProblem().getId(), Font.font(conf.fontSize));
+        time = new TextBox(submit.getTime().toString(), Font.font(conf.fontSize));
+        status = new TextBox(submit.getStatus().getId(), Font.font(conf.fontSize));
 
         box.getChildren().addAll(name, problem, time, status);
-        box.setPadding(new Insets(0 ,10, 0, 10));
+        box.setPadding(new Insets(0, 10, 0, 10));
 
         status.setAlignment(Pos.CENTER);
         box.setAlignment(Pos.CENTER_LEFT);
@@ -54,7 +54,7 @@ public class LiveSubmit extends StackPane {
     }
 
     public void updateStatus() {
-        FadeTransition fade = new FadeTransition(Duration.millis(conf.liveResultsFadeDuration), status.getText());
+        FadeTransition fade = new FadeTransition(conf.liveResultsFadeDuration, status.getText());
         fade.setFromValue(1);
         fade.setToValue(0);
         fade.setOnFinished(e -> {
@@ -69,7 +69,7 @@ public class LiveSubmit extends StackPane {
     }
 
     public Animation moveTo(double y) {
-        return new Timeline(new KeyFrame(Duration.millis(conf.liveResultsMoveDuration), new KeyValue(layoutYProperty(), y)));
+        return new Timeline(new KeyFrame(conf.liveResultsMoveDuration, new KeyValue(layoutYProperty(), y)));
     }
 
     public Submit getSubmit() {

@@ -19,8 +19,14 @@ public class LiveProblem extends StackPane {
     private final VBox box;
     private final Text count;
     private final Text time;
+    private final Contestant contestant;
+    private final Problem problem;
+    private final Config conf;
 
     public LiveProblem(Contestant contestant, Problem problem, Config conf, double width, double height) {
+        this.contestant = contestant;
+        this.problem = problem;
+        this.conf = conf;
         background = new Rectangle(width, height);
         count = new Text("-");
         count.setFont(Font.font(conf.fontSize * 0.75));
@@ -29,10 +35,10 @@ public class LiveProblem extends StackPane {
         box = new VBox(count);
         getChildren().addAll(background, box);
         box.setAlignment(Pos.CENTER);
-        update(contestant, problem, conf);
+        update();
     }
 
-    public void update(Contestant contestant, Problem problem, Config conf) {
+    public void update(Submit s) {
         int beforeFreeze = contestant.countFrozenAttempts(problem);
         int afterFreeze = contestant.countAttempts(problem) - beforeFreeze;
         box.getChildren().remove(time);
@@ -42,31 +48,38 @@ public class LiveProblem extends StackPane {
             return;
         }
         var solution = contestant.getFrozenSolution(problem);
-        if (setSolved(contestant, problem, conf, beforeFreeze, solution)) return;
+        if (setSolved(beforeFreeze, solution)) return;
         if (afterFreeze == 0) {
             count.setText(String.valueOf(beforeFreeze));
-            background.setFill(conf.failedColor);
+            if(s != null && s.getStatus().isQUE())
+                background.setFill(conf.queuedColor);
+            else
+                background.setFill(conf.failedColor);
             return;
         }
         count.setText(beforeFreeze + "+" + afterFreeze);
         background.setFill(conf.queuedColor);
     }
 
-    public void unfreeze(Contestant contestant, Problem problem, Config conf) {
+    public void update(){
+        update(null);
+    }
+
+    public void unfreeze() {
         int attempts = contestant.countAttempts(problem);
-        getChildren().remove(time);
+        box.getChildren().remove(time);
         if (attempts == 0) {
             count.setText("-");
             background.setFill(Color.TRANSPARENT);
             return;
         }
         var solution = contestant.getSolution(problem);
-        if (setSolved(contestant, problem, conf, attempts, solution)) return;
+        if (setSolved(attempts, solution)) return;
         count.setText(String.valueOf(attempts));
         background.setFill(conf.failedColor);
     }
 
-    private boolean setSolved(Contestant contestant, Problem problem, Config conf, int attempts, Submit solution) {
+    private boolean setSolved(int attempts, Submit solution) {
         if (solution != null) {
             count.setText(String.valueOf(attempts));
             if (problem.solvedFirst(contestant))
@@ -87,5 +100,15 @@ public class LiveProblem extends StackPane {
 
     public void updateWidth(double width){
 
+    }
+
+    public void select(){
+        background.setStroke(conf.selectedColor);
+        background.setStrokeWidth(2);
+    }
+
+    public void unselect(){
+        background.setStroke(Color.TRANSPARENT);
+        background.setStrokeWidth(0);
     }
 }

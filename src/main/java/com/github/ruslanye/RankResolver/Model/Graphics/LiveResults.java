@@ -87,7 +87,7 @@ public class LiveResults extends Stage implements SubmitObserver {
                     }
                 if (toRemove != null) {
                     toRemove.updateStatus();
-                    Animation pause = delayExit(toRemove, Duration.millis(conf.liveResultsStayDuration));
+                    Animation pause = delayExit(toRemove, conf.liveResultsStayDuration);
                     pause.play();
                 }
                 sub.removeObserver(this);
@@ -113,7 +113,7 @@ public class LiveResults extends Stage implements SubmitObserver {
                 Animation enter = liveSub.moveTo(getSubmitY(liveSub));
                 pane.getChildren().add(liveSub);
                 enter.play();
-                Animation timeout = delayExit(liveSub, Duration.millis(conf.liveResultsTimeout));
+                Animation timeout = delayExit(liveSub, conf.liveResultsTimeout);
                 timeout.play();
             }
         });

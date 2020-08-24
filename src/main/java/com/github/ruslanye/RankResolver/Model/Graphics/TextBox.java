@@ -1,5 +1,6 @@
 package com.github.ruslanye.RankResolver.Model.Graphics;
 
+import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -43,5 +44,15 @@ public class TextBox extends StackPane {
 
     public void updateHeight(double height){
         background.setHeight(height);
+    }
+
+    public void select(Config conf){
+        background.setStroke(conf.selectedColor);
+        background.setStrokeWidth(2);
+    }
+
+    public void unselect(){
+        background.setStroke(Color.TRANSPARENT);
+        background.setStrokeWidth(0);
     }
 }

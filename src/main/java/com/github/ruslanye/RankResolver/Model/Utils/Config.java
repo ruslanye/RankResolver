@@ -1,6 +1,7 @@
 package com.github.ruslanye.RankResolver.Model.Utils;
 
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -32,16 +33,20 @@ public class Config {
     public final int fetcherDelay;
     public final double liveResultsWidth;
     public final double liveResultsHeight;
-    public final double liveResultsTimeout;
-    public final double liveResultsMoveDuration;
-    public final double liveResultsFadeDuration;
-    public final double liveResultsStayDuration;
+    public final Duration liveResultsTimeout;
+    public final Duration liveResultsMoveDuration;
+    public final Duration liveResultsFadeDuration;
+    public final Duration liveResultsStayDuration;
     public final int liveResultsSubmitsLimit;
     public final double rankingWidth;
     public final double rankingHeight;
     public final int rankingContestantsLimit;
+    public final Duration autoscrollDuration;
+    public final Duration autoscrollDelay;
+    public final Duration resolverStepDuration;
+    public final int winnersNumber;
     public final double boxWidth;
-    public final double liveRankingMoveDuration;
+    public final Duration liveRankingMoveDuration;
     public final Color queuedColor;
     public final Color failedColor;
     public final Color solvedColor;
@@ -49,6 +54,7 @@ public class Config {
     public final Color headerColor;
     public final Color rowColor1;
     public final Color rowColor2;
+    public final Color selectedColor;
     public final double fontSize;
 
     public Config(){
@@ -66,16 +72,20 @@ public class Config {
         fetcherDelay = getIntProp("fetcherDelay");
         liveResultsWidth = getDoubleProp("liveResultsWidth");
         liveResultsHeight = getDoubleProp("liveResultsHeight");
-        liveResultsTimeout = getDoubleProp("liveResultsTimeout");
-        liveResultsMoveDuration = getDoubleProp("liveResultsMoveDuration");
-        liveResultsFadeDuration = getDoubleProp("liveResultsFadeDuration");
-        liveResultsStayDuration = getDoubleProp("liveResultsStayDuration");
+        liveResultsTimeout = getDurationProp("liveResultsTimeout");
+        liveResultsMoveDuration = getDurationProp("liveResultsMoveDuration");
+        liveResultsFadeDuration = getDurationProp("liveResultsFadeDuration");
+        liveResultsStayDuration = getDurationProp("liveResultsStayDuration");
         liveResultsSubmitsLimit = getIntProp("liveResultsSubmitsLimit");
         rankingWidth = getDoubleProp("rankingWidth");
         rankingHeight = getDoubleProp("rankingHeight");
         rankingContestantsLimit = getIntProp("rankingContestantsLimit");
+        autoscrollDuration = getDurationProp("autoscrollDuration");
+        autoscrollDelay = getDurationProp("autoscrollDelay");
+        resolverStepDuration = getDurationProp("resolverStepDuration");
+        winnersNumber = getIntProp("winnersNumber");
         boxWidth = getDoubleProp("boxWidth");
-        liveRankingMoveDuration = getDoubleProp("liveRankingMoveDuration");
+        liveRankingMoveDuration = getDurationProp("liveRankingMoveDuration");
         queuedColor = getColorProp("queuedColor");
         failedColor = getColorProp("failedColor");
         solvedColor = getColorProp("solvedColor");
@@ -83,6 +93,7 @@ public class Config {
         headerColor = getColorProp("headerColor");
         rowColor1 = getColorProp("rowColor1");
         rowColor2 = getColorProp("rowColor2");
+        selectedColor = getColorProp("selectedColor");
         fontSize = getDoubleProp("fontSize");
     }
     
@@ -96,5 +107,9 @@ public class Config {
 
     private Color getColorProp(String name){
         return Color.web(prop.getProperty(name));
+    }
+
+    private Duration getDurationProp(String name) {
+        return Duration.millis(getDoubleProp(name));
     }
 }
