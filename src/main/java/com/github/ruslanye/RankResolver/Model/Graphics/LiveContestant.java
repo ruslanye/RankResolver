@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class LiveContestant extends HBox {
-    private static final double PROBLEM_HEIGHT_RATIO = 0.95;
+    private static final double BOX_HEIGHT_RATIO = 0.95;
     private final Contestant contestant;
     private final Contest contest;
     private final Config conf;
@@ -51,7 +51,7 @@ public class LiveContestant extends HBox {
 
         problems = new HashMap<>();
         for (var problem : contest.getProblems()) {
-            var liveProblem = new LiveProblem(contestant, problem, conf, conf.boxWidth, height * PROBLEM_HEIGHT_RATIO);
+            var liveProblem = new LiveProblem(contestant, problem, conf, conf.boxWidth, height * BOX_HEIGHT_RATIO);
             getChildren().add(liveProblem);
             problems.put(problem, liveProblem);
         }
@@ -98,14 +98,14 @@ public class LiveContestant extends HBox {
 
     public void updateHeight(double newHeight) {
         height = newHeight;
-        rank.updateHeight(height);
-        name.updateHeight(height);
-        score.updateHeight(height);
-        placeHolder1.updateHeight(height);
-        time.updateHeight(height);
-        placeHolder2.updateHeight(height);
+        rank.updateHeight(height * BOX_HEIGHT_RATIO);
+        name.updateHeight(height * BOX_HEIGHT_RATIO);
+        score.updateHeight(height * BOX_HEIGHT_RATIO);
+        placeHolder1.updateHeight(height * BOX_HEIGHT_RATIO);
+        time.updateHeight(height * BOX_HEIGHT_RATIO);
+        placeHolder2.updateHeight(height * BOX_HEIGHT_RATIO);
         for (var problem : problems.values())
-            problem.updateHeight(height * PROBLEM_HEIGHT_RATIO);
+            problem.updateHeight(height * BOX_HEIGHT_RATIO);
         setPrefHeight(height);
     }
 

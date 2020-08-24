@@ -87,9 +87,6 @@ public class LiveRanking extends Ranking implements ContestantObserver {
                         liveCon.setRank(i + 1);
                         trans.getChildren().add(liveCon.moveTo(getRowY(i + 1)));
                     }
-//                    var liveCon = liveCons.get(contestant);
-//                    trans.getChildren().add(liveCon.update(submit));
-//                    liveCons.get(contestant).update(submit);
                     animations.add(trans);
                     if (animations.size() == 1) {
                         trans.setOnFinished(this::onMoveFinished);

@@ -80,18 +80,19 @@ public class LiveSubmit extends StackPane {
         double boxWidth = conf.boxWidth * newWidth / width;
         width = newWidth;
         background.setWidth(width);
-        name.updateWidth(width - 6 * boxWidth);
+        name.updateWidth(width - 9 * boxWidth);
         problem.updateWidth(boxWidth);
-        time.updateWidth(3 * boxWidth);
+        time.updateWidth(6 * boxWidth);
         status.updateWidth(2 * boxWidth);
-        setPrefWidth(width);
+        box.setPrefWidth(width);
     }
 
     public void updateHeight(double newHeight) {
         height = newHeight;
         background.setHeight(height);
         status.updateHeight(height);
-        setPrefHeight(height);
+        box.setMinHeight(height);
+        setMinHeight(height);
     }
 
     public void setFill(Paint p) {

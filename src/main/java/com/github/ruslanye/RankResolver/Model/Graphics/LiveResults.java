@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LiveResults extends Stage implements SubmitObserver {
-    private static final Double MARGIN = 0.1;
+    private static final Double MARGIN = 0.05;
     private final Config conf;
     private final List<LiveSubmit> liveSubs;
     private final Pane pane;
@@ -47,7 +47,7 @@ public class LiveResults extends Stage implements SubmitObserver {
 
     private double getSubmitY(LiveSubmit sub) {
         int pos = liveSubs.indexOf(sub);
-        return getHeight() * MARGIN + sub.getPrefHeight() * pos;
+        return getHeight() * MARGIN + sub.getMinHeight() * pos;
     }
 
     private double getSubmitWidth(){
