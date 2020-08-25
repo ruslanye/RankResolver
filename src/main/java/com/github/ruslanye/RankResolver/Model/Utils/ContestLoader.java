@@ -11,9 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ContestLoader {
-    public static List<Submit> loadSubmits(String path, Contest contest, Config conf) {
+    public static List<Submit> loadSubmits(String path, Contest contest) {
         LinkedList<Submit> list = null;
         boolean success = false;
+        Config conf = Config.getConfig();
         while (!success) {
             try (
                     Reader reader = Files.newBufferedReader(Paths.get(path));
@@ -40,9 +41,10 @@ public class ContestLoader {
         return list;
     }
 
-    public static List<Contestant> loadContestants(String path, Config conf) {
+    public static List<Contestant> loadContestants(String path) {
         LinkedList<Contestant> list = null;
         boolean success = false;
+        Config conf = Config.getConfig();
         while (!success) {
             try (
                     Reader reader = Files.newBufferedReader(Paths.get(path));
@@ -111,9 +113,9 @@ public class ContestLoader {
         return list;
     }
 
-    public static Contest loadContest(Config conf){
+    public static Contest loadContest(){
         Contest contest = new Contest();
-        contest.addContestants(loadContestants(Config.contestantsPath, conf));
+        contest.addContestants(loadContestants(Config.contestantsPath));
         contest.addProblems(loadProblems(Config.problemsPath));
         contest.addStatuses(loadStatuses(Config.statusesPath));
         return contest;

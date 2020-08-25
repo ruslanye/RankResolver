@@ -24,11 +24,11 @@ public class LiveSubmit extends StackPane {
     private double width;
     private double height;
 
-    public LiveSubmit(Submit submit, Config conf, double width, double height) {
+    public LiveSubmit(Submit submit, double width, double height) {
         this.submit = submit;
-        this.conf = conf;
         this.width = width;
         this.height = height;
+        conf = Config.getConfig();
 
         box = new HBox();
 

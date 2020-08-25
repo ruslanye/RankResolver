@@ -29,9 +29,9 @@ public class Ranking extends Stage {
     protected final List<LiveContestant> ranking;
     protected final RankingHeader header;
 
-    public Ranking(Contest contest, Config conf) {
-        this.contest = contest;
-        this.conf = conf;
+    public Ranking(Contest con) {
+        contest = con;
+        conf = Config.getConfig();
         pane = new Pane();
         background = new Pane();
         stack = new StackPane(background, pane);
@@ -43,10 +43,10 @@ public class Ranking extends Stage {
         Contest.frozenRank(frozenContestants);
         ranking = new ArrayList<>();
         rows = new ArrayList<>();
-        header = new RankingHeader(contest, conf, getRowWidth(), getRowHeight());
+        header = new RankingHeader(contest, getRowWidth(), getRowHeight());
         background.getChildren().add(header);
         for (int i = 0; i < frozenContestants.size(); i++) {
-            var liveCon = new LiveContestant(frozenContestants.get(i), contest, conf, getRowWidth(), getRowHeight());
+            var liveCon = new LiveContestant(frozenContestants.get(i), contest, getRowWidth(), getRowHeight());
             ranking.add(liveCon);
             pane.getChildren().add(liveCon);
             liveCon.setLayoutX(getRowX());

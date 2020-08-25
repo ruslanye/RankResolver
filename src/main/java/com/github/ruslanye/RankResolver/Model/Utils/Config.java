@@ -12,6 +12,7 @@ public class Config {
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
     public static final String propPath = getConfigPath("config.properties");
+    public static final String contestPath = getConfigPath("contest.properties");
     public static final String contestantsPath = getConfigPath("contestants.csv");
     public static final String problemsPath = getConfigPath("problems.csv");
     public static final String statusesPath = getConfigPath("statuses.csv");
@@ -23,6 +24,8 @@ public class Config {
     public static String getConfigPath(String path){
         return getConfigPath() + File.separator + path;
     }
+
+    private static final Config instance = new Config();
     
     private final Properties prop;
 
@@ -57,10 +60,16 @@ public class Config {
     public final Color selectedColor;
     public final double fontSize;
 
-    public Config(){
+    private Config(){
         prop = new Properties();
         try {
             prop.load(new FileInputStream(propPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            prop.load(new FileInputStream(contestPath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,6 +104,10 @@ public class Config {
         rowColor2 = getColorProp("rowColor2");
         selectedColor = getColorProp("selectedColor");
         fontSize = getDoubleProp("fontSize");
+    }
+
+    public static Config getConfig(){
+        return instance;
     }
     
     private double getDoubleProp(String name){

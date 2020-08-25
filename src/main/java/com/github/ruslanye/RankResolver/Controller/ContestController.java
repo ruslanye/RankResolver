@@ -13,7 +13,6 @@ import com.github.ruslanye.RankResolver.Model.Utils.Fetcher;
 import javafx.fxml.FXML;
 
 public class ContestController {
-    private Config conf;
     private Contest contest;
     private Fetcher fetcher;
     private LiveResults results;
@@ -21,9 +20,8 @@ public class ContestController {
     private Resolver resolver;
 
     public void startContest(){
-        conf = new Config();
-        contest = ContestLoader.loadContest(conf);
-        fetcher = new Fetcher(conf, contest);
+        contest = ContestLoader.loadContest();
+        fetcher = new Fetcher(contest);
         for(var contestant : contest.getContestants())
             fetcher.addObserver(contestant);
         fetcher.addObserver(new SubmitObserver() {
@@ -46,7 +44,7 @@ public class ContestController {
     @FXML
     public void liveResults(){
         if(results == null) {
-            results = new LiveResults(conf);
+            results = new LiveResults();
             fetcher.addObserver(results);
         }
         results.show();
@@ -55,7 +53,7 @@ public class ContestController {
     @FXML
     public void liveRanking(){
         if(ranking == null) {
-            ranking = new LiveRanking(contest, conf);
+            ranking = new LiveRanking(contest);
             for(var contestant : contest.getContestants())
                 contestant.addObserver(ranking);
         }
@@ -65,7 +63,7 @@ public class ContestController {
     @FXML
     public void resolver(){
         if(resolver == null) {
-            resolver = new Resolver(contest, conf);
+            resolver = new Resolver(contest);
         }
         resolver.show();
     }

@@ -22,8 +22,8 @@ public class LiveRanking extends Ranking implements ContestantObserver {
     private final Queue<Animation> animations = new LinkedList<>();
     private Animation autoscroll;
 
-    public LiveRanking(Contest contest, Config conf) {
-        super(contest, conf);
+    public LiveRanking(Contest contest) {
+        super(contest);
         setTitle("LiveRanking");
         for (var liveCon : ranking) {
             liveCons.put(liveCon.getContestant(), liveCon);

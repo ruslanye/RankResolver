@@ -28,11 +28,12 @@ public class RankingHeader extends StackPane {
     private double width;
     private double height;
 
-    public RankingHeader(Contest contest, Config conf, double width, double height) {
+    public RankingHeader(Contest contest, double width, double height) {
         this.contest = contest;
-        this.conf = conf;
         this.width = width;
         this.height = height;
+
+        conf = Config.getConfig();
 
         box = new HBox();
         background = new Rectangle(width, height);

@@ -31,8 +31,8 @@ public class Resolver extends Ranking {
     private int prevAnim;
     private boolean playing;
 
-    public Resolver(Contest contest, Config conf) {
-        super(contest, conf);
+    public Resolver(Contest contest) {
+        super(contest);
         setTitle("Resolver");
         this.widthProperty().addListener((obs, oldVal, newVal) -> {
             updateWidth();

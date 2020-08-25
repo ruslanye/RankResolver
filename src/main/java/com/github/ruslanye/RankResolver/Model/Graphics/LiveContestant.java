@@ -32,12 +32,13 @@ public class LiveContestant extends HBox {
     private double height;
     private boolean frozen;
 
-    public LiveContestant(Contestant contestant, Contest contest, Config conf, double width, double height) {
+    public LiveContestant(Contestant contestant, Contest contest, double width, double height) {
         this.contestant = contestant;
         this.contest = contest;
-        this.conf = conf;
         this.height = height;
         this.width = width;
+
+        conf = Config.getConfig();
 
         rank = new TextBox("", Font.font(conf.fontSize));
         name = new TextBox(contestant.getName(), Font.font(conf.fontSize));
@@ -51,7 +52,7 @@ public class LiveContestant extends HBox {
 
         problems = new HashMap<>();
         for (var problem : contest.getProblems()) {
-            var liveProblem = new LiveProblem(contestant, problem, conf, conf.boxWidth, height * BOX_HEIGHT_RATIO);
+            var liveProblem = new LiveProblem(contestant, problem, conf.boxWidth, height * BOX_HEIGHT_RATIO);
             getChildren().add(liveProblem);
             problems.put(problem, liveProblem);
         }

@@ -23,10 +23,10 @@ public class LiveProblem extends StackPane {
     private final Problem problem;
     private final Config conf;
 
-    public LiveProblem(Contestant contestant, Problem problem, Config conf, double width, double height) {
+    public LiveProblem(Contestant contestant, Problem problem, double width, double height) {
         this.contestant = contestant;
         this.problem = problem;
-        this.conf = conf;
+        conf = Config.getConfig();
         background = new Rectangle(width, height);
         count = new Text("-");
         count.setFont(Font.font(conf.fontSize * 0.75));

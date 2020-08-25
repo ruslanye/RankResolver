@@ -11,11 +11,11 @@ public class Fetcher implements Runnable {
     private final List<SubmitObserver> observers;
     private final Config conf;
     private final Contest contest;
-    private List<Submit> submits;
+    private final List<Submit> submits;
 
-    public Fetcher(Config conf, Contest contest){
-        this.conf = conf;
-        this.contest = contest;
+    public Fetcher(Contest con){
+        conf = Config.getConfig();
+        contest = con;
         observers = new LinkedList<>();
         submits = new LinkedList<>();
     }
@@ -36,7 +36,7 @@ public class Fetcher implements Runnable {
             } catch (InterruptedException e) {
                 return;
             }
-            var newSubmits = ContestLoader.loadSubmits(conf.submitsPath, contest, conf);
+            var newSubmits = ContestLoader.loadSubmits(conf.submitsPath, contest);
             var it1 = submits.listIterator();
             var it2 = newSubmits.listIterator();
             LinkedList<Submit> toAdd = new LinkedList<>();

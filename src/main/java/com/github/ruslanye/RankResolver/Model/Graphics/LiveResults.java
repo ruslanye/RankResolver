@@ -23,8 +23,8 @@ public class LiveResults extends Stage implements SubmitObserver {
     private final Pane pane;
     private int count;
 
-    public LiveResults(Config conf) {
-        this.conf = conf;
+    public LiveResults() {
+        conf = Config.getConfig();
         count = 0;
 
         setTitle("LiveResults");
@@ -102,7 +102,7 @@ public class LiveResults extends Stage implements SubmitObserver {
                 sub.addObserver(this);
                 if (liveSubs.size() >= conf.liveResultsSubmitsLimit)
                     return;
-                LiveSubmit liveSub = new LiveSubmit(sub, conf, getSubmitWidth(), getSubmitHeight());
+                LiveSubmit liveSub = new LiveSubmit(sub, getSubmitWidth(), getSubmitHeight());
                 if(count++%2==0)
                     liveSub.setFill(conf.rowColor1);
                 else
