@@ -73,7 +73,11 @@ public class Ranking extends Stage {
     }
 
     protected Animation moveToEnd(int pos, Duration duration) {
-        return moveTo(Math.min(getRowY(getLimit()) - getRowY(pos + 2), 0), duration);
+        return moveTo(getMoveY(pos), duration);
+    }
+
+    protected double getMoveY(int pos){
+        return Math.min(getRowY(getLimit()) - getRowY(pos + 2), 0);
     }
 
     protected void updateWidth() {

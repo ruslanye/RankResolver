@@ -54,7 +54,8 @@ public class ContestLoader {
                 list = new LinkedList<>();
                 for (var record : records) {
                     var name = record[0];
-                    list.add(new Contestant(name, conf.startTime, conf.startTime.plusMinutes(conf.liveDuration)));
+                    var misc = record[1];
+                    list.add(new Contestant(name, misc, conf.startTime, conf.startTime.plusMinutes(conf.liveDuration)));
                 }
                 success = true;
             } catch (Exception e) {

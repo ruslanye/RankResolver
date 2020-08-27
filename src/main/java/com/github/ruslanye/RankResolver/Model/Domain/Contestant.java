@@ -7,13 +7,15 @@ import java.util.Objects;
 
 public class Contestant implements SubmitObserver {
     private final String name;
+    private final String misc;
     private final LocalDateTime freezeTime;
     private final Calculator calculator;
     private final Calculator frozenCalculator;
     private final List<ContestantObserver> observers;
 
-    public Contestant(String name, LocalDateTime startTime, LocalDateTime freezeTime) {
+    public Contestant(String name, String misc, LocalDateTime startTime, LocalDateTime freezeTime) {
         this.name = name;
+        this.misc = misc;
         this.freezeTime = freezeTime;
         observers = new ArrayList<>();
         calculator = new Calculator(startTime);
@@ -106,5 +108,9 @@ public class Contestant implements SubmitObserver {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public String getMisc() {
+        return misc;
     }
 }

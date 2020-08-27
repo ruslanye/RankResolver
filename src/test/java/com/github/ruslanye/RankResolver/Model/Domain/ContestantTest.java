@@ -42,7 +42,7 @@ public class ContestantTest {
 
     @BeforeEach
     public void setupContestant() {
-        contestant = new Contestant("PPP", startTime, startTime.plusMinutes(1000));
+        contestant = new Contestant("PPP", "", startTime, startTime.plusMinutes(1000));
     }
 
     @Test

@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
@@ -16,6 +18,7 @@ public class Config {
     public static final String contestantsPath = getConfigPath("contestants.csv");
     public static final String problemsPath = getConfigPath("problems.csv");
     public static final String statusesPath = getConfigPath("statuses.csv");
+    public static final String winnerScreenPath = getConfigPath("winScreen.html");
 
     public static String getConfigPath() {
         return System.getProperty("user.dir") + File.separator + "config";
@@ -59,6 +62,7 @@ public class Config {
     public final Color rowColor2;
     public final Color selectedColor;
     public final double fontSize;
+    public final String winScreen;
 
     private Config(){
         prop = new Properties();
@@ -104,6 +108,15 @@ public class Config {
         rowColor2 = getColorProp("rowColor2");
         selectedColor = getColorProp("selectedColor");
         fontSize = getDoubleProp("fontSize");
+
+        String temp;
+        try {
+            temp = Files.readString(Paths.get(winnerScreenPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+            temp = "<h1>Congratulations,</h1>\n<h1>@name!</h1>";
+        }
+        winScreen = temp;
     }
 
     public static Config getConfig(){

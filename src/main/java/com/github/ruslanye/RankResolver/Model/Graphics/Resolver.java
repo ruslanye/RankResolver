@@ -2,7 +2,6 @@ package com.github.ruslanye.RankResolver.Model.Graphics;
 
 import com.github.ruslanye.RankResolver.Model.Domain.Contest;
 import com.github.ruslanye.RankResolver.Model.Domain.Contestant;
-import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
@@ -14,19 +13,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Resolver extends Ranking {
     private final List<Animation> forwards;
     private final List<Animation> backwards;
-    private final Map<Contestant, StackPane> winners;
     private int nextAnim;
     private int prevAnim;
     private boolean playing;
@@ -34,12 +29,8 @@ public class Resolver extends Ranking {
     public Resolver(Contest contest) {
         super(contest);
         setTitle("Resolver");
-        this.widthProperty().addListener((obs, oldVal, newVal) -> {
-            updateWidth();
-        });
-        this.heightProperty().addListener((obs, oldVal, newVal) -> {
-            updateHeight();
-        });
+        this.widthProperty().addListener((obs, oldVal, newVal) -> updateWidth());
+        this.heightProperty().addListener((obs, oldVal, newVal) -> updateHeight());
         getScene().addEventHandler(KeyEvent.KEY_RELEASED, e -> {
             switch (e.getCode()) {
                 case SPACE:
@@ -63,7 +54,6 @@ public class Resolver extends Ranking {
         playing = false;
         forwards = new ArrayList<>();
         backwards = new ArrayList<>();
-        winners = new HashMap<>();
         prepareResolver();
     }
 
@@ -92,21 +82,20 @@ public class Resolver extends Ranking {
         return trans;
     }
 
-    private void announceWinner(Contestant con){
-        var text1 = new Text("Congratulations,");
-        var text2 = new Text(con.getName());
-        text1.setFont(Font.font(conf.fontSize*2));
-        text2.setFont(Font.font(conf.fontSize*2));
-        var box = new VBox(text1, text2);
+    private void announceWinner(Contestant con, int pos) {
+        WebView view = new WebView();
+        view.getEngine().loadContent(conf.winScreen.replaceAll("@name",
+                con.getName()).replaceAll("@misc", con.getMisc()));
+        var box = new VBox(view);
         box.setAlignment(Pos.CENTER);
         var rect = new Rectangle(getWidth(), getHeight());
         rect.setFill(Color.WHITE);
         var stack = new StackPane(rect, box);
-        winners.put(con, stack);
-        forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().add(stack)))));
-        backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().remove(stack)))));
-        forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().remove(stack)))));
-        backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> this.stack.getChildren().add(stack)))));
+        stack.setLayoutY(-getMoveY(pos));
+        forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().add(stack)))));
+        backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().remove(stack)))));
+        forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().remove(stack)))));
+        backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().add(stack)))));
 
     }
 
@@ -116,7 +105,6 @@ public class Resolver extends Ranking {
         forwards.add(moveToEnd(ranking.size(), conf.autoscrollDuration));
         backwards.add(moveToEnd(0, conf.autoscrollDuration));
         int i = ranking.size() - 1;
-//        reRank();
         var prevTrans = updateRanking();
         while (i >= 0) {
             var liveCon = ranking.get(i);
@@ -125,8 +113,8 @@ public class Resolver extends Ranking {
             if (!liveCon.isFrozen()) {
                 forwards.add(unselectRow(i));
                 backwards.add(selectRow(i));
-                if(i < conf.winnersNumber)
-                    announceWinner(liveCon.getContestant());
+                if (i < conf.winnersNumber)
+                    announceWinner(liveCon.getContestant(), i + 1);
                 if (i >= conf.rankingContestantsLimit) {
                     forwards.add(moveToEnd(i, conf.resolverStepDuration));
                     backwards.add(moveToEnd(i + 1, conf.resolverStepDuration));
@@ -144,9 +132,9 @@ public class Resolver extends Ranking {
                 prevTrans = updateRanking();
                 forwards.add(prevTrans);
             }
-            if(liveCon == ranking.get(i)){
-                if(i < conf.winnersNumber)
-                    announceWinner(liveCon.getContestant());
+            if (liveCon == ranking.get(i)) {
+                if (i < conf.winnersNumber)
+                    announceWinner(liveCon.getContestant(), i + 1);
                 if (i >= conf.rankingContestantsLimit) {
                     forwards.add(moveToEnd(i, conf.resolverStepDuration));
                     backwards.add(moveToEnd(i + 1, conf.resolverStepDuration));
