@@ -3,7 +3,9 @@ package com.github.ruslanye.RankResolver.Model.Utils;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -19,19 +21,7 @@ public class Config {
     public static final String problemsPath = getConfigPath("problems.csv");
     public static final String statusesPath = getConfigPath("statuses.csv");
     public static final String winnerScreenPath = getConfigPath("winScreen.html");
-
-    public static String getConfigPath() {
-        return System.getProperty("user.dir") + File.separator + "config";
-    }
-
-    public static String getConfigPath(String path){
-        return getConfigPath() + File.separator + path;
-    }
-
     private static final Config instance = new Config();
-    
-    private final Properties prop;
-
     public final LocalDateTime startTime;
     public final String submitsPath;
     public final int liveDuration;
@@ -52,7 +42,7 @@ public class Config {
     public final Duration resolverStepDuration;
     public final int winnersNumber;
     public final double boxWidth;
-    public final Duration liveRankingMoveDuration;
+    public final Duration rankingMoveDuration;
     public final Color queuedColor;
     public final Color failedColor;
     public final Color solvedColor;
@@ -63,8 +53,8 @@ public class Config {
     public final Color selectedColor;
     public final double fontSize;
     public final String winScreen;
-
-    private Config(){
+    private final Properties prop;
+    private Config() {
         prop = new Properties();
         try {
             prop.load(new FileInputStream(propPath));
@@ -98,7 +88,7 @@ public class Config {
         resolverStepDuration = getDurationProp("resolverStepDuration");
         winnersNumber = getIntProp("winnersNumber");
         boxWidth = getDoubleProp("boxWidth");
-        liveRankingMoveDuration = getDurationProp("liveRankingMoveDuration");
+        rankingMoveDuration = getDurationProp("rankingMoveDuration");
         queuedColor = getColorProp("queuedColor");
         failedColor = getColorProp("failedColor");
         solvedColor = getColorProp("solvedColor");
@@ -119,19 +109,27 @@ public class Config {
         winScreen = temp;
     }
 
-    public static Config getConfig(){
+    public static String getConfigPath() {
+        return System.getProperty("user.dir") + File.separator + "config";
+    }
+
+    public static String getConfigPath(String path) {
+        return getConfigPath() + File.separator + path;
+    }
+
+    public static Config getConfig() {
         return instance;
     }
-    
-    private double getDoubleProp(String name){
+
+    private double getDoubleProp(String name) {
         return Double.parseDouble(prop.getProperty(name));
     }
-    
-    private int getIntProp(String name){
+
+    private int getIntProp(String name) {
         return Integer.parseInt(prop.getProperty(name));
     }
 
-    private Color getColorProp(String name){
+    private Color getColorProp(String name) {
         return Color.web(prop.getProperty(name));
     }
 

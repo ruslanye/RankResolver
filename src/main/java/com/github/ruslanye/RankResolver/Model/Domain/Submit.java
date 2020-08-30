@@ -1,18 +1,17 @@
 package com.github.ruslanye.RankResolver.Model.Domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class Submit {
     private final long number;
-    private Status status;
     private final Problem problem;
     private final LocalDateTime time;
     private final Contestant contestant;
     private final List<SubmitObserver> observers;
+    private Status status;
 
     public Submit(long number, Contestant contestant, Problem problem, LocalDateTime time, Status status) {
         this.number = number;
@@ -21,18 +20,18 @@ public class Submit {
         this.time = time;
         this.status = status;
         observers = new LinkedList<>();
-        if(status.isOK())
+        if (status.isOK())
             problem.solvedFirst(contestant);
     }
 
-    public long getNumber(){
+    public long getNumber() {
         return number;
     }
 
     public void changeStatus(Status newStatus) {
         var oldStatus = status;
         status = newStatus;
-        if(status.isOK())
+        if (status.isOK())
             problem.solvedFirst(contestant);
         for (var observer : new LinkedList<>(observers)) {
             observer.notify(this, oldStatus);

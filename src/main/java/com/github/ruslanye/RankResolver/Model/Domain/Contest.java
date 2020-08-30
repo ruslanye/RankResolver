@@ -16,6 +16,24 @@ public class Contest {
         statuses = new HashMap<>();
     }
 
+    public static void rank(List<Contestant> contestants) {
+        contestants.sort((x, y) -> {
+            var scoreComp = Long.compare(y.getScore(), x.getScore());
+            var timeComp = Long.compare(x.getTotalTime(),
+                    y.getTotalTime());
+            return scoreComp == 0 ? timeComp == 0 ? x.getName().compareTo(y.getName()) : timeComp : scoreComp;
+        });
+    }
+
+    public static void frozenRank(List<Contestant> contestants) {
+        contestants.sort((x, y) -> {
+            var scoreComp = Long.compare(y.getFrozenScore(), x.getFrozenScore());
+            var timeComp = Long.compare(x.getFrozenTotalTime(),
+                    y.getFrozenTotalTime());
+            return scoreComp == 0 ? timeComp == 0 ? x.getName().compareTo(y.getName()) : timeComp : scoreComp;
+        });
+    }
+
     public Contestant getContestant(String id) {
         return contestants.get(id);
     }
@@ -62,23 +80,5 @@ public class Contest {
 
     public void addStatuses(List<Status> statuses) {
         statuses.forEach(this::addStatus);
-    }
-
-    public static void rank(List<Contestant> contestants){
-        contestants.sort((x, y) -> {
-            var scoreComp = Long.compare(y.getScore(), x.getScore());
-            var timeComp = Long.compare(x.getTime(),
-                    y.getTime());
-            return scoreComp == 0 ? timeComp == 0 ? x.getName().compareTo(y.getName()) : timeComp : scoreComp;
-        });
-    }
-
-    public static void frozenRank(List<Contestant> contestants){
-        contestants.sort((x, y) -> {
-            var scoreComp = Long.compare(y.getFrozenScore(), x.getFrozenScore());
-            var timeComp = Long.compare(x.getFrozenTime(),
-                    y.getFrozenTime());
-            return scoreComp == 0 ? timeComp == 0 ? x.getName().compareTo(y.getName()) : timeComp : scoreComp;
-        });
     }
 }

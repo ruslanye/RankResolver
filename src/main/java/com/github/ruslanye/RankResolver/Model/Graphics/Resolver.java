@@ -110,7 +110,7 @@ public class Resolver extends Ranking {
             var liveCon = ranking.get(i);
             forwards.add(selectRow(i));
             backwards.add(unselectRow(i));
-            if (!liveCon.isFrozen()) {
+            if (liveCon.isResolved()) {
                 forwards.add(unselectRow(i));
                 backwards.add(selectRow(i));
                 if (i < conf.winnersNumber)
@@ -122,9 +122,7 @@ public class Resolver extends Ranking {
                 i--;
                 continue;
             }
-            liveCon.setFrozen(false);
-            forwards.addAll(liveCon.unfreeze());
-            backwards.addAll(liveCon.freeze());
+            liveCon.resolve(forwards, backwards, i > 0 ? ranking.get(i - 1) : null);
             forwards.add(unselectRow(i));
             backwards.add(selectRow(i));
             if (reRank()) {
@@ -143,7 +141,7 @@ public class Resolver extends Ranking {
             }
         }
         for (LiveContestant liveContestant : ranking)
-            liveContestant.setFrozen(true);
+            liveContestant.reset();
         reRank();
         updateHeight();
     }

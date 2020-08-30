@@ -13,15 +13,15 @@ public class TextBox extends StackPane {
     private final Text text;
     private final Rectangle background;
 
-    public TextBox(String text){
+    public TextBox(String text) {
         this(text, Font.getDefault());
     }
 
-    public TextBox(String text, Font font){
+    public TextBox(String text, Font font) {
         this(text, font, Pos.CENTER_LEFT);
     }
 
-    public TextBox(String text, Font font, Pos pos){
+    public TextBox(String text, Font font, Pos pos) {
         this.text = new Text(text);
         this.text.setFont(font);
         background = new Rectangle();
@@ -34,25 +34,15 @@ public class TextBox extends StackPane {
         return text;
     }
 
-    public void setFill(Paint p){
+    public void setFill(Paint p) {
         background.setFill(p);
     }
 
-    public void updateWidth(double width){
+    public void updateWidth(double width) {
         background.setWidth(width);
     }
 
-    public void updateHeight(double height){
+    public void updateHeight(double height) {
         background.setHeight(height);
-    }
-
-    public void select(Config conf){
-        background.setStroke(conf.selectedColor);
-        background.setStrokeWidth(2);
-    }
-
-    public void unselect(){
-        background.setStroke(Color.TRANSPARENT);
-        background.setStrokeWidth(0);
     }
 }

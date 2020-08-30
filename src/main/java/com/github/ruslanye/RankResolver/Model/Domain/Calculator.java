@@ -9,25 +9,25 @@ public class Calculator {
     private final LocalDateTime startTime;
     private final Map<Problem, Submit> solvedProblems;
     private final Map<Problem, List<Submit>> groupedSubmits;
-    private final Map<Problem, Long> penalties;
+    private final Map<Problem, Long> times;
     private int score;
-    private long time;
+    private long totalTime;
 
     public Calculator(LocalDateTime startTime) {
         score = 0;
-        time = 0;
+        totalTime = 0;
         this.startTime = startTime;
         solvedProblems = new HashMap<>();
         groupedSubmits = new HashMap<>();
-        penalties = new HashMap<>();
+        times = new HashMap<>();
     }
 
     public int getScore() {
         return score;
     }
 
-    public long getTime() {
-        return time;
+    public long getTotalTime() {
+        return totalTime;
     }
 
     public List<Submit> getSubmits(Problem problem) {
@@ -36,6 +36,12 @@ public class Calculator {
 
     public Submit getSolution(Problem problem) {
         return solvedProblems.get(problem);
+    }
+
+    public long getTime(Problem problem) {
+        if (solvedProblems.get(problem) == null)
+            return 0;
+        return times.get(problem);
     }
 
     private long calculatePenalty(List<Submit> submits, Submit solution) {
@@ -49,16 +55,16 @@ public class Calculator {
     private void addOK(Submit submit, Problem problem, List<Submit> submits) {
         solvedProblems.put(problem, submit);
         score += problem.getScore();
-        long penalty = calculatePenalty(submits, submit);
-        penalties.put(problem, penalty);
-        time += TimeUnit.MINUTES.toMillis(penalty) + ChronoUnit.MILLIS.between(startTime, submit.getTime());
+        long time = TimeUnit.MINUTES.toMillis(calculatePenalty(submits, submit)) +
+                ChronoUnit.MILLIS.between(startTime, submit.getTime());
+        times.put(problem, time);
+        totalTime += time;
     }
 
-    private void removeOK(Submit submit, Problem problem) {
+    private void removeOK(Problem problem) {
         solvedProblems.remove(problem);
         score -= problem.getScore();
-        long penalty = penalties.get(problem);
-        time -= TimeUnit.MINUTES.toMillis(penalty) + ChronoUnit.MILLIS.between(startTime, submit.getTime());
+        totalTime -= times.get(problem);
     }
 
     public void addSubmit(Submit submit) {
@@ -68,7 +74,7 @@ public class Calculator {
         var solution = solvedProblems.get(submit.getProblem());
         if (submit.getStatus().isOK() && (solution == null || submit.getTime().isBefore(solution.getTime()))) {
             if (solution != null)
-                removeOK(solution, solution.getProblem());
+                removeOK(solution.getProblem());
             addOK(submit, submit.getProblem(), submits);
         }
     }
@@ -78,7 +84,7 @@ public class Calculator {
         var submits = groupedSubmits.get(problem);
         var solution = solvedProblems.get(problem);
         if (submit.getStatus() != oldStatus && solution == submit) {
-            removeOK(submit, problem);
+            removeOK(problem);
             solution = null;
             for (var sub : submits)
                 if (sub.getStatus().isOK() && (solution == null || sub.getTime().isBefore(solution.getTime())))
@@ -89,7 +95,7 @@ public class Calculator {
         } else if (submit.getStatus().isOK() && (solution == null
                 || submit.getTime().isBefore(solution.getTime()))) {
             if (solution != null)
-                removeOK(solution, problem);
+                removeOK(problem);
             addOK(submit, problem, submits);
         }
     }

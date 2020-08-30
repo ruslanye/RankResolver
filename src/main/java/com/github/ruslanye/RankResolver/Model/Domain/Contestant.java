@@ -34,12 +34,20 @@ public class Contestant implements SubmitObserver {
         return frozenCalculator.getScore();
     }
 
-    public long getTime() {
-        return calculator.getTime();
+    public long getTotalTime() {
+        return calculator.getTotalTime();
     }
 
-    public long getFrozenTime() {
-        return frozenCalculator.getTime();
+    public long getTime(Problem problem) {
+        return calculator.getTime(problem);
+    }
+
+    public long getFrozenTime(Problem problem) {
+        return frozenCalculator.getTime(problem);
+    }
+
+    public long getFrozenTotalTime() {
+        return frozenCalculator.getTotalTime();
     }
 
     public void addObserver(ContestantObserver observer) {
