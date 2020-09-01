@@ -86,6 +86,8 @@ public class Resolver extends Ranking {
         WebView view = new WebView();
         view.getEngine().loadContent(conf.winScreen.replaceAll("@name",
                 con.getName()).replaceAll("@misc", con.getMisc()));
+        view.setMinWidth(getWidth());
+        view.setMinHeight(getHeight());
         var box = new VBox(view);
         box.setAlignment(Pos.CENTER);
         var rect = new Rectangle(getWidth(), getHeight());

@@ -22,7 +22,6 @@ lines = f1.readlines()
 
 def que(s):
     r = s.split(',')
-    # print(r)
     r[4] = "QUE\n"
     return  ','.join(r)
 
