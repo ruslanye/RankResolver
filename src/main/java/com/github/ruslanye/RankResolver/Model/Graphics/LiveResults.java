@@ -60,7 +60,7 @@ public class LiveResults extends Stage implements SubmitObserver {
 
     private Animation delayExit(LiveSubmit submit, Duration duration) {
         Animation delay = new SequentialTransition(new PauseTransition(duration));
-        Animation exit = submit.moveTo(-submit.getPrefHeight());
+        Animation exit = submit.moveTo(-getSubmitHeight());
         delay.setOnFinished(e -> {
             if(!liveSubs.contains(submit))
                 return;

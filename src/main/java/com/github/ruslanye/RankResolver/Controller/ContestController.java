@@ -44,6 +44,7 @@ public class ContestController {
     public void liveResults(){
         if(results == null) {
             results = new LiveResults();
+            fetcher.addObserver(results);
         }
         results.show();
     }
