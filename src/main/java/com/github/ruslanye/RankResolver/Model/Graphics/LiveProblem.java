@@ -99,7 +99,7 @@ public class LiveProblem extends StackPane {
     }
 
     public void updateWidth(double width){
-
+        background.setWidth(width);
     }
 
     public void select(){

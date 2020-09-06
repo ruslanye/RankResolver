@@ -50,11 +50,11 @@ public class Contestant implements SubmitObserver {
         return frozenCalculator.getTotalTime();
     }
 
-    public void addObserver(ContestantObserver observer) {
+    public synchronized void addObserver(ContestantObserver observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(ContestantObserver observer) {
+    public synchronized void removeObserver(ContestantObserver observer) {
         observers.remove(observer);
     }
 

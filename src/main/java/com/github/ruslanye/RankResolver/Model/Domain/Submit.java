@@ -50,11 +50,11 @@ public class Submit {
         return problem;
     }
 
-    public void addObserver(SubmitObserver observer) {
+    public synchronized void addObserver(SubmitObserver observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(SubmitObserver observer) {
+    public synchronized void removeObserver(SubmitObserver observer) {
         observers.remove(observer);
     }
 

@@ -192,5 +192,10 @@ public class LiveContestant extends HBox {
         problemIter = contest.getProblems().listIterator();
         currentScore = contestant.getFrozenScore();
         currentTime = contestant.getFrozenTotalTime();
+        score.getText().setText(String.valueOf(contestant.getFrozenScore()));
+        time.getText().setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(contestant.getFrozenTotalTime())));
+        for(var problem : problems.values()){
+            problem.update();
+        }
     }
 }

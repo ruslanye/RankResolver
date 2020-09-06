@@ -20,11 +20,11 @@ public class Fetcher implements Runnable {
         submits = new LinkedList<>();
     }
 
-    public void addObserver(SubmitObserver observer) {
+    public synchronized void addObserver(SubmitObserver observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(SubmitObserver observer) {
+    public synchronized void removeObserver(SubmitObserver observer) {
         observers.remove(observer);
     }
 

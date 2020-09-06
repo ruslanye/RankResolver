@@ -17,10 +17,13 @@ import javafx.scene.web.WebView;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Resolver extends Ranking {
     private final List<Animation> forwards;
+    private final Set<Integer> winScreens;
     private final List<Animation> backwards;
     private int nextAnim;
     private int prevAnim;
@@ -47,6 +50,12 @@ public class Resolver extends Ranking {
                     pause();
                     nextStep();
                     break;
+                case R:
+                    pause();
+                    nextAnim = 0;
+                    prevAnim = -1;
+                    stack.setLayoutY(0);
+                    prepareResolver();
             }
         });
         nextAnim = 0;
@@ -54,6 +63,7 @@ public class Resolver extends Ranking {
         playing = false;
         forwards = new ArrayList<>();
         backwards = new ArrayList<>();
+        winScreens = new HashSet<>();
         prepareResolver();
     }
 
@@ -94,6 +104,7 @@ public class Resolver extends Ranking {
         rect.setFill(Color.WHITE);
         var stack = new StackPane(rect, box);
         stack.setLayoutY(-getMoveY(pos));
+        winScreens.add(forwards.size());
         forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().add(stack)))));
         backwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().remove(stack)))));
         forwards.add(new Timeline(new KeyFrame(Duration.millis(1), (e -> pane.getChildren().remove(stack)))));
@@ -104,6 +115,7 @@ public class Resolver extends Ranking {
     public void prepareResolver() {
         forwards.clear();
         backwards.clear();
+        winScreens.clear();
         forwards.add(moveToEnd(ranking.size(), conf.autoscrollDuration));
         backwards.add(moveToEnd(0, conf.autoscrollDuration));
         int i = ranking.size() - 1;
@@ -180,7 +192,10 @@ public class Resolver extends Ranking {
             prevAnim++;
             var anim = forwards.get(nextAnim - 1);
             anim.setOnFinished(this::keepPlaying);
-            anim.setDelay(conf.resolverStepDuration);
+            if(winScreens.contains(nextAnim-2))
+                anim.setDelay(conf.winScreenDuration);
+            else
+                anim.setDelay(conf.resolverStepDuration);
             anim.play();
         }
     }

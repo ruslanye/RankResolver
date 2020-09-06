@@ -40,6 +40,7 @@ public class Config {
     public final Duration autoscrollDuration;
     public final Duration autoscrollDelay;
     public final Duration resolverStepDuration;
+    public final Duration winScreenDuration;
     public final int winnersNumber;
     public final double boxWidth;
     public final Duration rankingMoveDuration;
@@ -86,6 +87,7 @@ public class Config {
         autoscrollDuration = getDurationProp("autoscrollDuration");
         autoscrollDelay = getDurationProp("autoscrollDelay");
         resolverStepDuration = getDurationProp("resolverStepDuration");
+        winScreenDuration = getDurationProp("winScreenDuration");
         winnersNumber = getIntProp("winnersNumber");
         boxWidth = getDoubleProp("boxWidth");
         rankingMoveDuration = getDurationProp("rankingMoveDuration");

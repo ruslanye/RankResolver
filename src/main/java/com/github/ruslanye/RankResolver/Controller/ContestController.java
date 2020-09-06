@@ -7,7 +7,6 @@ import com.github.ruslanye.RankResolver.Model.Domain.SubmitObserver;
 import com.github.ruslanye.RankResolver.Model.Graphics.LiveRanking;
 import com.github.ruslanye.RankResolver.Model.Graphics.LiveResults;
 import com.github.ruslanye.RankResolver.Model.Graphics.Resolver;
-import com.github.ruslanye.RankResolver.Model.Utils.Config;
 import com.github.ruslanye.RankResolver.Model.Utils.ContestLoader;
 import com.github.ruslanye.RankResolver.Model.Utils.Fetcher;
 import javafx.fxml.FXML;
@@ -45,7 +44,6 @@ public class ContestController {
     public void liveResults(){
         if(results == null) {
             results = new LiveResults();
-            fetcher.addObserver(results);
         }
         results.show();
     }
@@ -56,15 +54,21 @@ public class ContestController {
             ranking = new LiveRanking(contest);
             for(var contestant : contest.getContestants())
                 contestant.addObserver(ranking);
+            ranking.setOnCloseRequest((e -> {
+                for(var contestant : contest.getContestants())
+                    contestant.removeObserver(ranking);
+                ranking = null;
+            }));
+            ranking.show();
         }
-        ranking.show();
     }
 
     @FXML
     public void resolver(){
         if(resolver == null) {
             resolver = new Resolver(contest);
+            resolver.setOnCloseRequest((e) -> resolver = null);
+            resolver.show();
         }
-        resolver.show();
     }
 }
