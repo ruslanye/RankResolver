@@ -87,6 +87,8 @@ public class LiveContestant extends HBox {
         score.getText().setText(String.valueOf(contestant.getFrozenScore()));
         time.getText().setText(String.valueOf(TimeUnit.MILLISECONDS.toMinutes(contestant.getFrozenTotalTime())));
         var problem = submit.getProblem();
+        currentTime = contestant.getFrozenTotalTime();
+        currentScore = contestant.getFrozenScore();
         problems.get(problem).update(submit);
     }
 
